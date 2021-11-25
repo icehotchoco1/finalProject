@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Allbbs-Mapper">
+
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			)			
+		</if>
+	</sql>
+	<sql id="bbsAT">
+		<if test="bbsType == 'bn'.toString()">
+		and(
+			bbsctt_no like 'bnbd%'
+		)
+		</if>
+		<if test="bbsType == 'ctsn'.toString()">
+		and(
+			bbsctt_no like 'ctsn%'
+		)
+		</if>
+		<if test="bbsType == 'Free'.toString()">
+		and(
+			bbsctt_no like 'Free%'
+		)
+		</if>
+		<if test="bbsType == 'mngt'.toString()">
+		and(
+			bbsctt_no like 'mngt%'
+		)
+		</if>
+		<if test="bbsType == 'nt'.toString()">
+		and(
+			bbsctt_no like 'ntbd%'
+		)
+		</if>
+		<if test="bbsType == 'all'.toString()">
+		and(
+			bbsctt_no is not null
+		)
+		</if>
+	</sql>
+	
+	
+	<select id="selectSearchAllbbsList" resultType="allbbs">
+	  select T.*
+      from          
+        (
+        select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+        from bbs_cmpny_dsptch
+        union all
+        select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+        from bbs_ctsnnbd
+        union all
+        select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+        from bbs_freebd       
+        union all
+        select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+        from bbs_mngtbd     
+        union all
+        select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+        from bbs_ntbd
+         ) T
+         where 1=1
+        <include refid="search" />
+		<include refid="bbsAT"/>
+         ORDER BY T.RGSDE DESC
+	</select>
+
+	<select id="selectSearchAllbbsListCount" resultType="int">
+	       select count(*)
+       from(
+            select T.*
+            from(
+                select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+                from bbs_cmpny_dsptch
+                union all
+                select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+                from bbs_ctsnnbd
+                union all
+                select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+                from bbs_freebd       
+                union all
+                select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+                from bbs_mngtbd     
+                union all
+                select bbsctt_no,sj,rgsde,empno,rdcnt,emp_nm 
+                from bbs_ntbd
+            ) T
+            where 1 = 1
+            <include refid="search" />
+			<include refid="bbsAT"/>
+    	)
+	</select>
+	
+
+
+</mapper>

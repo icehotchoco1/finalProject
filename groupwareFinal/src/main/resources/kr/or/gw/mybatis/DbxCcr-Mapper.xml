@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DbxCcr-Mapper">
+	
+	<select id="selectDbxCcrList" resultType="dbxCcr">
+		select *
+		from dbx_cocnr;
+	</select>
+	
+	<select id="selectDbxCcrByNo" parameterType="str" resultType="dbxCcr">
+		select *
+		from dbx_cocnr
+		where cocnr_no = ${cocnr_no};
+	</select>
+
+	<update id="insertDbxCcr" parameterType="dbxCcr">
+		insert 
+		into
+		dbx_cocnr(cocnr_no,dbx_no,cocnr_empno,cocnr_nm, rcvr_empno)
+		values
+		(#{cocnr_no},#{dbx_no},#{cocnr_empno},#{cocnr_nm}, #{rcvr_empno})
+	</update>
+
+	
+	<select id="selectDbxCcrSeqNext" resultType="int">
+		select dbxCcr_seq.nextval as cocnr_no from dual
+	</select>
+</mapper>
+
+
+
+
+
+
+
+

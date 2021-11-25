@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DclzCom-Mapper">
+
+
+	<select id="selectMonth" resultType="dclzCom">
+	
+		select
+		       nvl(to_char(sum(case when to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 &lt;= 0 then 0
+		                   else to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 end)
+		         + floor(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi'))))/60)),0) as month_h,
+		         
+		       nvl(to_char(mod(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi')))),60)),0) as month_m
+		       
+		from orgnzt_emp_mngt a full outer join dclz_mngt b
+		on a.empno = b.empno
+		and b.attend_time between trunc(sysdate,'MM') and last_day(sysdate)
+		where a.nm is not null
+		group by a.empno, a.nm
+		order by a.nm
+		
+	</select>
+	
+	
+	<select id="selectDeptInfo" resultType="dclzCom">
+	
+		select a.nm, a.empno, a.face_photo,
+		       b.code_dc as dept_code,
+		       (select code_dc
+		        from code b
+		        where a.clsf_code = b.code_no) as clsf_code
+		from orgnzt_emp_mngt a, code b
+		where a.dept_code = b.code_no
+		order by a.nm
+	</select>
+	
+	<select id="selectOneCha" resultType="dclzCom">
+	
+		select 
+			    nvl(to_char(sum(case when to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 &lt;= 0 then 0
+		                   else to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 end)
+		         + floor(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi'))))/60)),0) as one_h,
+			  nvl(to_char(mod(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi')))),60)),0) as one_m
+		from orgnzt_emp_mngt a full outer join dclz_mngt b
+		on a.empno = b.empno
+		and b.attend_time between trunc(sysdate,'MM') and trunc(sysdate,'MM')+6
+		where a.nm is not null
+		group by a.empno, a.nm
+		order by a.nm
+	</select>
+	
+	<select id="selectTwoCha" resultType="dclzCom">
+	
+		select 
+		   	   nvl(to_char(sum(case when to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 &lt;= 0 then 0
+		                   else to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 end)
+		         + floor(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi'))))/60)),0) as two_h,
+			  nvl(to_char(mod(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi')))),60)),0) as two_m
+		from orgnzt_emp_mngt a full outer join dclz_mngt b
+		on a.empno = b.empno
+		and b.attend_time between  trunc(sysdate,'MM')+7 and trunc(sysdate,'MM')+13
+		where a.nm is not null
+		group by a.empno, a.nm
+		order by a.nm
+	</select>
+	
+	<select id="selectThreeCha" resultType="dclzCom">
+		select 
+			    nvl(to_char(sum(case when to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 &lt;= 0 then 0
+		                   else to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 end)
+		         + floor(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi'))))/60)),0) as three_h,
+			  nvl(to_char(mod(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi')))),60)),0) as three_m
+		from orgnzt_emp_mngt a full outer join dclz_mngt b
+		on a.empno = b.empno
+		and b.attend_time between  trunc(sysdate,'MM')+14 and trunc(sysdate,'MM')+20
+		where a.nm is not null
+		group by a.empno, a.nm
+		order by a.nm
+	</select>
+	
+	<select id="selectFourCha" resultType="dclzCom">
+		select 
+			    nvl(to_char(sum(case when to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 &lt;= 0 then 0
+		                   else to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 end)
+		         + floor(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi'))))/60)),0) as four_h,
+			  nvl(to_char(mod(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi')))),60)),0) as four_m
+		from orgnzt_emp_mngt a full outer join dclz_mngt b
+		on a.empno = b.empno
+		and b.attend_time between  trunc(sysdate,'MM')+21 and trunc(sysdate,'MM')+27
+		where a.nm is not null
+		group by a.empno, a.nm
+		order by a.nm
+	</select>
+	
+	<select id="selectFiveCha" resultType="dclzCom">
+		select 
+			    nvl(to_char(sum(case when to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 &lt;= 0 then 0
+		                   else to_number(to_char(b.lvffc_time, 'HH24')) - to_number(to_char(b.attend_time, 'HH24'))-1 end)
+		         + floor(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi'))))/60)),0) as five_h,
+			  nvl(to_char(mod(sum(ABS(to_number(to_char(b.lvffc_time, 'Mi')) - to_number(to_char(b.attend_time, 'Mi')))),60)),0) as five_m
+		from orgnzt_emp_mngt a full outer join dclz_mngt b
+		on a.empno = b.empno
+		and b.attend_time between  trunc(sysdate,'MM')+28 and last_day(sysdate)
+		where a.nm is not null
+		group by a.empno, a.nm
+		order by a.nm
+	</select>
+
+	<select id="selectTardy" resultType="dclzCom">
+		select c.nm,  count(b.code_dc) as tardy
+		from dclz_mngt a full outer join code b 
+		on a.sttus_code = b.CODE_NO full outer join orgnzt_emp_mngt c
+		on a.empno = c.empno
+		and b.CODE_NO = 'F005'
+		and a.attend_time between trunc(sysdate,'MM') and last_day(sysdate)
+		where c.nm is not null
+		group by c.empno, c.nm
+		order by c.nm
+	</select>
+
+	<select id="selectEarlyLeave" resultType="dclzCom">
+		select c.nm,  count(b.code_dc) as earlyLeave
+		from dclz_mngt a full outer join code b 
+		on a.sttus_code = b.CODE_NO full outer join orgnzt_emp_mngt c
+		on a.empno = c.empno
+		and b.CODE_NO = 'F002'
+		and a.attend_time between trunc(sysdate,'MM') and last_day(sysdate)
+		where c.nm is not null
+		group by c.empno, c.nm
+		order by c.nm
+	</select>
+
+	<select id="selectAbsenteeism" resultType="dclzCom">
+		select c.nm,  count(b.code_dc) as absenteeism
+		from dclz_mngt a full outer join code b 
+		on a.sttus_code = b.CODE_NO full outer join orgnzt_emp_mngt c
+		on a.empno = c.empno
+		and b.CODE_NO = 'F003'
+		and a.attend_time between trunc(sysdate,'MM') and last_day(sysdate)
+		where c.nm is not null
+		group by c.empno, c.nm
+		order by c.nm
+	</select>
+
+
+	<select id="selectMyCommute" resultType="dclz">
+		select empno, attend_time, lvffc_time
+		from dclz_mngt
+		where empno=#{empno}
+		and to_char(attend_time,'yyyy-mm-dd') = to_char(sysdate,'yyyy-mm-dd')
+	</select>
+</mapper>

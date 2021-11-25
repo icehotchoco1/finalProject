@@ -1,0 +1,100 @@
+@charset "UTF-8";
+
+body {
+  padding: 10px 20px;
+}
+.menu-header {
+  display: inline;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px;
+}
+.this {
+  font-size: 16px;
+  font-weight: bold;
+  color: #004680;
+}
+.content-header {
+  border-bottom: 5px solid #004680;
+}
+.card-header {
+  margin-top: 20px;
+  border-bottom: none;
+}
+.card-body {
+  padding-top: 8px;
+}
+.card-footer {
+  background: white;
+}
+
+/* 결재양식 */
+ul#custom-tabs-four-tab a {
+  font-size: 13px;
+  font-weight: bold;
+  color: #004680;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  background: #E9F3F5;
+}
+.card.card-outline-tabs {
+  border-top: 3px solid #004680;
+}
+.card.card-outline-tabs .card-header a:hover {
+  border-top: 3px solid lightgrey;
+}
+
+div.boxing {
+  height: 206px;
+  border:1px solid lightgrey;
+  border-top: 3px solid #004680;
+}
+.nav-tabs {
+  height: auto;
+}
+#boxing_1 {
+  text-align:center; border-right:0; padding:0;
+  border-radius: 8px 0 0 8px;
+}
+#boxing_2 {
+  border-left:0;
+  border-radius: 0 8px 8px 0;
+  background: #E9F3F5;
+  overflow-y:scroll;
+}
+.tab-content {
+  margin: 20px;
+}
+.tab-content a{
+  font-size: 13px;
+  color: #556278;
+  cursor: pointer;
+}
+.tab-content a:hover {
+  color: tomato;
+}
+i.fa-angle-double-right {
+  margin-top:80px;
+  color: #004680;
+}
+div#vert-tabs-tab a{
+  font-weight: bold;
+  font-size: 13px;
+  padding: 10px 16px;
+  color: #004680;
+}
+.fa-file-text {
+  color: #556278;
+}
+
+.nav-tabs.flex-column .nav-item.show .nav-link, .nav-tabs.flex-column .nav-link.active {
+  background: #E9F3F5;
+}
+
+
+div.not_exist {
+  font-size: 13px;
+  text-align:center;
+  margin-top: 70px;
+  color: tomato;
+}

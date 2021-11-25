@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="JobRcv-Mapper">
+	
+	<select id="selectJobRcvList"	resultType="jobRcv">
+		select
+		*
+		from
+		job_rcv
+		where job_index is not null
+		order by job_index desc
+	</select>
+	
+	<select id="selectJobRcvListCount"	resultType="int">
+		select
+		count(*)
+		from
+		job_rcv
+		where job_index is not null
+		order by job_index desc
+	</select>
+	
+	<select id="selectJobByJobIn"  resultType="jobRcv">
+		select * 
+		from job_rcv
+		where job_index=#{job_index}
+	</select>
+	
+	<select id="selectJobByJobNo"  resultType="jobRcv">
+		select * 
+		from job_rcv
+		where job_no=#{job_no}
+	</select>
+	
+	<update id="insertJobRcv" parameterType="jobRcv">
+		insert 
+		into
+		job_rcv(job_index,job_no,rcver_empno,rcver_progrs,rcver_nm,rcver_order) 
+		values
+		(#{job_index},#{job_no},#{rcver_empno},0,#{rcver_nm},#{rcver_order})
+	</update>
+	
+	<update id="updateJobRcv" parameterType="jobRcv">
+		update 
+		job_rcv 
+		set
+		rcver_progrs=#{rcver_progrs}
+		where job_index=#{job_index}
+	</update>
+	
+	<update id="deleteJobRcv" parameterType="str">
+		delete 
+		from job_rcv
+		where job_no=#{job_no}
+	</update>
+	
+	<select id="selectJobRcvSequenceNextValue" resultType="str">
+		select jrcv_seq.nextval as job_index from dual
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+

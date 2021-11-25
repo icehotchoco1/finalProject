@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- boardImgPath -->
+	<bean id="imgPath" class="java.lang.String">
+		<constructor-arg value="${summernote.img}"/>
+	</bean>
+	
+	<!-- member.picture -->
+	<bean id="memberPicture" class="java.lang.String">
+		<constructor-arg value="${member.picture.upload}"/>
+	</bean>
+	
+	<!-- member.picture -->
+	<bean id="memberSign" class="java.lang.String">
+		<constructor-arg value="${member.sign.upload}"/>
+	</bean>
+	
+	<!-- file upload -->
+		<!-- ctsn -->
+	<bean id="ctsnFileUpPath" class="java.lang.String">
+		<constructor-arg value="${event.upload}"/>
+	</bean>
+		<!-- news -->
+	<bean id="newsFileUpPath" class="java.lang.String">
+		<constructor-arg value="${news.upload}"/>
+	</bean>
+		<!-- notice -->
+	<bean id="noticeFileUpPath" class="java.lang.String">
+		<constructor-arg value="${notice.upload}"/>
+	</bean>
+	<!-- 관리부게시판 -->
+	<bean id="mngtFileUpPath" class="java.lang.String">
+		<constructor-arg value="${mngt.upload}"/>
+	</bean>
+	<bean id="jobFileUpPath" class="java.lang.String">
+		<constructor-arg value="${job.upload}"/>
+	</bean>
+	<bean id="jobAnsFileUpPath" class="java.lang.String">
+		<constructor-arg value="${jobAns.upload}"/>
+	</bean>
+	<bean id="dbxIndiFileUpPath" class="java.lang.String">
+		<constructor-arg value="${dbx.indi.upload}"/>
+	</bean>
+	<bean id="orgUpPath" class="java.lang.String">
+		<constructor-arg value="${organogram.upload}"/>
+	</bean>
+	<bean id="freeFileUpPath" class="java.lang.String">
+		<constructor-arg value="${free.upload}"/>
+	</bean>
+	
+	<bean id="eccstUpPath" class="java.lang.String">
+		<constructor-arg value="${eccst.upload}"/>
+	</bean>
+	
+	
+	<!-- DAO -->
+	<bean id="menuDAO" class="kr.or.gw.dao.MenuDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+	
+	<bean id="empDAO" class="kr.or.gw.dao.EmpDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!-- 직원 -->
+	
+	<bean id="newsDAO" class="kr.or.gw.dao.NewsDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!-- 회사소식게시판 -->
+		
+	<bean id="mngtDAO" class="kr.or.gw.dao.MngtDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--관리부게시판  -->
+		
+	<bean id="noticeDAO" class="kr.or.gw.dao.NoticeDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--공지사항게시판  -->
+
+	<bean id="dbxDAO" class="kr.or.gw.dao.DbxDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--개인문서함  -->
+		
+	<bean id="ctsnDAO" class="kr.or.gw.dao.CtsnDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--경조사게시판-->
+	
+	<bean id="atchDAO" class="kr.or.gw.dao.AtchDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--파일첨부-->
+	
+	<bean id="erfDAO" class="kr.or.gw.dao.ErfDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--결재양식함-->
+
+	<bean id="jobDAO" class="kr.or.gw.dao.JobDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--업무-->
+
+	<bean id="schDAO" class="kr.or.gw.dao.SchDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--일정-->
+		
+	<bean id="jobRcvDAO" class="kr.or.gw.dao.JobRcvDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--업무수신-->
+
+	<bean id="jobAnsDAO" class="kr.or.gw.dao.JobAnsDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--업무댓글-->
+
+	<bean id="escMngtDAO" class="kr.or.gw.dao.EscMngtDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--임시보관함-->
+	
+	<bean id="codeDAO" class="kr.or.gw.dao.CodeDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--코드-->
+
+	<bean id="mypageDAO" class="kr.or.gw.dao.MypageDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--마이페이지-->
+
+	<bean id="ntcnDAO" class="kr.or.gw.dao.NtcnDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--알림-->
+	
+	<bean id="escDbxDAO" class="kr.or.gw.dao.EscDbxDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--참조함-->
+	
+	<bean id="dclzVacDAO" class="kr.or.gw.dao.DclzVacDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--휴가-->
+	
+	<bean id="dclzVacCodeDAO" class="kr.or.gw.dao.DclzVacCodeDAOImpl"
+		p:sqlSession-ref="sqlSession" /> <!--휴가코드-->
+	
+	
+	
+	<!-- Service -->
+	<bean id="menuService" class="kr.or.gw.service.MenuServiceImpl"
+		p:menuDAO-ref="menuDAO" />
+		
+	<bean id="empService" class="kr.or.gw.service.EmpServiceImpl"
+		p:empDAO-ref="empDAO" />
+		
+	<bean id="newsService" class="kr.or.gw.service.NewsServiceImpl"
+		p:atchDAO-ref="atchDAO"
+		p:newsDAO-ref="newsDAO"/> <!--회사소식게시판  -->
+		
+	<bean id="MngtService" class="kr.or.gw.service.MngtServiceImpl"
+		p:mngtDAO-ref="mngtDAO"
+		p:atchDAO-ref="atchDAO"/><!--관리부게시판  -->
+		
+	<bean id="noticeService" class="kr.or.gw.service.NoticeServiceImpl"
+		p:noticeDAO-ref="noticeDAO"
+		p:atchDAO-ref="atchDAO"/><!--공지사항게시판  -->
+
+	<bean id="dbxService" class="kr.or.gw.service.DbxServiceImpl"
+		p:atchDAO-ref="atchDAO"
+		p:dbxDAO-ref="dbxDAO"/> <!--개인문서함  -->
+		
+	<bean id="ctsnService" class="kr.or.gw.service.CtsnServiceImpl"
+		p:ctsnDAO-ref="ctsnDAO"
+		p:atchDAO-ref="atchDAO"/> <!--경조사게시판  -->
+		
+	<bean id="erfService" class="kr.or.gw.service.ErfServiceImpl"
+		p:erfDAO-ref="erfDAO"/> <!-- 결재양식함 --> 
+
+	<bean id="jobService" class="kr.or.gw.service.JobServiceImpl"
+		p:atchDAO-ref="atchDAO"
+		p:codeDAO-ref="codeDAO"
+		p:jobAnsDAO-ref="jobAnsDAO"
+		p:jobRcvDAO-ref="jobRcvDAO"
+		p:empDAO-ref="empDAO"
+		p:jobDAO-ref="jobDAO"/> <!-- 업무 --> 
+		
+	<bean id="schService" class="kr.or.gw.service.SchServiceImpl"
+		p:schDAO-ref="schDAO"/> <!-- 일정 --> 
+		
+	<bean id="escMngtService" class="kr.or.gw.service.EscMngtServiceImpl"
+		p:escMngtDAO-ref="escMngtDAO"/> <!-- 임시보관함 --> 
+	
+	<bean id="jobAnsService" class="kr.or.gw.service.JobAnsServiceImpl"
+		p:jobAnsDAO-ref="jobAnsDAO"/> <!-- 업무댓글 --> 
+
+	<bean id="mypageService" class="kr.or.gw.service.MyPageServiceImpl"
+		p:mypageDAO-ref="mypageDAO"/> <!-- 마이페이지 --> 
+	
+	<bean id="ntcnService" class="kr.or.gw.service.NtcnServiceImpl"
+		p:ntcnDAO-ref="ntcnDAO"/> <!-- 알림 --> 
+	
+	<bean id="escDbxService" class="kr.or.gw.service.EscDbxServiceImpl"
+		p:escMngtDAO-ref="escMngtDAO"
+		p:escDbxDAO-ref="escDbxDAO"/> <!-- 참조함 --> 
+	
+	<bean id="jobRcvService" class="kr.or.gw.service.JobRcvServiceImpl"
+		p:jobRcvDAO-ref="jobRcvDAO"/> <!-- 업무 담당 --> 
+	
+	<bean id="dclzVacService" class="kr.or.gw.service.DclzVacServiceImpl"
+		p:dclzVacCodeDAO-ref="dclzVacCodeDAO"
+		p:codeDAO-ref="codeDAO"
+		p:escMngtDAO-ref="escMngtDAO"
+		p:dclzVacDAO-ref="dclzVacDAO"/> <!-- 휴가 --> 
+	
+	<bean id="dclzVacCodeService" class="kr.or.gw.service.DclzVacCodeServiceImpl"
+		p:dclzVacCodeDAO-ref="dclzVacCodeDAO"/> <!-- 휴가코드 -->
+		
+</beans>

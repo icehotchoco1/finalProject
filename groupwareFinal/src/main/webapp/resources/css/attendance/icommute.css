@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+body {
+	padding: 10px 20px;
+}
+
+.menu-header {
+	display: inline;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 8px;
+}
+
+.this {
+	font-size: 16px;
+	font-weight: bold;
+	color: #004680;
+}
+
+.content-header {
+	border-bottom: 5px solid #004680;
+}
+
+.card-header {
+	margin-top: 20px;
+	border-bottom: none;
+}
+
+.card-body {
+	padding-top: 8px;
+	height: 60vh;
+}
+
+.attcolor {
+	color: #48a2de;
+}
+.search-bar {
+  width: 200px;
+}
+th {
+  background: #EFEFEF;
+}
+td {
+  color: #556278;
+}
+/* content-header 와 div row 공간  */
+.dd {
+	padding: 30px;
+}
+/*검색버튼  */
+.btnnn {
+	float: 50%;
+	background: white;
+	padding: 5 px 12 px;
+	margin: 0 2 px;
+	border: 2 px solid lightgrey;
+	border-radius: 3 px;
+	color: #5B5B5B;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+#btnSearch{
+	float: 50%;
+	background: white;
+	padding: 5 px 12 px;
+	margin: 0 2 px;
+	border: 2 px solid lightgrey;
+	border-radius: 3 px;
+	color: #5B5B5B;
+	font-size: 13px;
+	font-weight: bold;
+	
+}

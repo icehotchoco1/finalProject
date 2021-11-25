@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApprovalAdbox-Mapper">
+
+<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			)			
+		</if>
+	</sql>
+	
+	<!-- 중요도 -->
+	<sql id="ipcrcode">
+		<!-- 낮음 -->
+		<if test="ipcrcode == 'H001'.toString()">
+			and ipcr_code = 'H001'
+		</if>
+		<!-- 보통 -->
+		<if test="ipcrcode == 'H002'.toString()">
+			and ipcr_code ='H002'
+		</if>
+		<!--높음  -->
+		<if test="ipcrcode == 'H003'.toString()">
+			and ipcr_code ='H003'
+		</if>
+		<!--긴급  -->
+		<if test="ipcrcode == 'H004'.toString()">
+			and ipcr_code ='H004'
+		</if>
+	</sql>
+	
+	
+	<sql id="formnm">
+		<if test="formnm == '근태신청서'.toString()">
+			and form_nm = '근태신청서'
+		</if>
+		<if test="formnm == '휴가신청서'.toString()">
+			and form_nm = '휴가신청서'
+		</if>
+		<if test="formnm == '연장근무신청서'.toString()">
+			and form_nm = '연장근무신청서'
+		</if>
+		<if test="formnm == '일반품의서'.toString()">
+			and form_nm = '일반품의서'
+		</if>
+		<if test="formnm == '이의신청서'.toString()">
+			and form_nm = '이의신청서'
+		</if>
+		<if test="formnm == '지출결의서'.toString()">
+			and form_nm = '지출결의서'
+		</if>
+		<if test="formnm == '지출품의서'.toString()">
+			and form_nm = '지출품의서'
+		</if>
+	
+	</sql>
+	
+<select id="eccRequestList" resultType="escmngt" >
+    select a.sanctn_no,c.form_nm,a.empno,a.sj,a.scrty_grad,a.prsrv_pd,a.rgsde,a.sanctn_tmlmt,
+         (select code_dc 
+                from code b
+         where a.ipcr_code = b.code_no
+          )as ipcr_code,
+           (select code_dc 
+                from code b
+         where a.sttus_code = b.code_no
+          )as sttus_code,a.bgnde,a.endde,a.return_reason,a.nm
+      from eccst_sanctn_mngt a, eccst_regstr_form c
+      where a.form_no = c.form_no and a.empno = #{empno} and a.sttus_code in('G001','G002')
+      <include refid="search" />
+	  <include refid="ipcrcode" />
+	  <include refid="formnm" />
+      order by lpad(sanctn_no, 20, 0) desc
+</select>
+<select id="selecteccRequestListCount" resultType="int">
+		select
+		count(*)
+		 from eccst_sanctn_mngt a, eccst_regstr_form c
+      where a.form_no = c.form_no and a.empno = #{empno} and a.sttus_code in('G001','G002')
+	  <include refid="search" />
+	  <include refid="ipcrcode" />
+	  <include refid="formnm" />
+		order by lpad(sanctn_no, 20, 0) desc
+</select>
+
+<select id="eccRejectList" resultType="escmngt" >
+    select a.sanctn_no,c.form_nm,a.sj, a.empno,
+            (select code_dc 
+                from code b
+         where a.sttus_code = b.code_no
+          )as sttus_code,
+          (select code_dc 
+                from code b
+         where a.ipcr_code = b.code_no
+          )as ipcr_code,
+          a.rgsde, a.sanctn_tmlmt
+      from eccst_sanctn_mngt a, eccst_regstr_form c
+      where a.form_no = c.form_no
+      		and a.sttus_code='G003' and a.empno = #{empno}
+      <include refid="search" />
+	  <include refid="ipcrcode" />
+	  <include refid="formnm" />		
+      order by lpad(sanctn_no, 20, 0) desc
+</select>
+<select id="selecteccRejectListCount" resultType="int">
+		select
+		count(*)
+		from eccst_sanctn_mngt a, eccst_regstr_form c
+        where a.form_no = c.form_no
+        and a.sttus_code='G003' and a.empno = #{empno}
+	  <include refid="search" />
+	  <include refid="ipcrcode" />
+	  <include refid="formnm" />
+		order by lpad(sanctn_no, 20, 0) desc
+</select>
+
+<select id="eccCompletionList" resultType="escmngt" >
+    select a.sanctn_no,c.form_nm,a.sj,  a.empno,
+            (select code_dc 
+                from code b
+         where a.sttus_code = b.code_no
+          )as sttus_code,
+          (select code_dc 
+                from code b
+         where a.ipcr_code = b.code_no
+          )as ipcr_code,
+          a.rgsde, a.sanctn_tmlmt
+      from eccst_sanctn_mngt a, eccst_regstr_form c
+      where a.form_no = c.form_no
+      		and a.sttus_code='G005' and a.empno = #{empno}
+      <include refid="search" />
+	  <include refid="ipcrcode" />
+	  <include refid="formnm" />		
+      order by lpad(sanctn_no, 20, 0) desc
+</select>
+
+<select id="selecteccCompletionListCount" resultType="int">
+		select
+		count(*)
+		 from eccst_sanctn_mngt a, eccst_regstr_form c
+    	 where a.form_no = c.form_no
+      	 and a.sttus_code='G005' and a.empno = #{empno}
+	  <include refid="search" />
+	  <include refid="ipcrcode" />
+	  <include refid="formnm" />
+		order by lpad(sanctn_no, 20, 0) desc
+</select>
+
+<select id="eccWaitList" resultType="escmngt" >
+    	select a.sanctn_no,c.form_nm,a.empno,a.sj,a.scrty_grad,a.prsrv_pd,a.rgsde,a.sanctn_tmlmt,
+         (select code_dc 
+                from code b
+         where a.ipcr_code = b.code_no
+          )as ipcr_code,
+          a.sttus_code,a.bgnde,a.endde,a.return_reason,a.nm
+    	from eccst_sanctn_mngt a,eccst_regstr_form c
+		where a.sanctn_no in (
+						select sanctn_no 
+						from eccst_sanctner
+						where (sanctner_empno = #{empno} or replace_empno=#{empno}) and sanctn_sttus = 'L001' )
+		and  a.form_no = c.form_no				
+      <include refid="search" />
+	  <include refid="ipcrcode" />
+	  <include refid="formnm" />		
+      order by lpad(sanctn_no, 20, 0) desc
+</select>
+
+
+<select id="selecteccWaitListCount" resultType="int">
+		select
+		count(*)
+		from eccst_sanctn_mngt a,eccst_regstr_form c
+		where a.sanctn_no in (
+						select sanctn_no 
+						from eccst_sanctner
+						where (sanctner_empno = #{empno} or replace_empno=#{empno}) and sanctn_sttus = 'L001' )
+		and  a.form_no = c.form_no				
+	  <include refid="search" />
+	  <include refid="ipcrcode" />
+	  <include refid="formnm" />
+		order by lpad(sanctn_no, 20, 0) desc
+</select>
+
+
+</mapper>
+

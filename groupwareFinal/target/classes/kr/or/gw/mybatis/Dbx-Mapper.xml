@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Dbx-Mapper">
+	
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and cn like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and (
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+	</sql>
+	
+	<select id="selectSearchDbxIndiList" resultType="dbx">
+		select
+		*
+		from
+		dbx
+		where DBX_NO is not null
+		and dbx_se='E001'
+		and empno=#{empno}
+		<include refid="search" />
+		order by dbx_no desc
+	</select>
+
+	<select id="selectSearchDbxIndiListCount" resultType="int">
+		select
+		count(*)
+		from
+		dbx
+		where DBX_NO is not null  
+		and dbx_se='E001'
+		and empno=#{empno}			  	
+		<include refid="search" />
+		order by dbx_no desc
+	</select>
+	
+	<select id="selectDbxByDbxno"  resultType="dbx">
+		select * 
+		from dbx
+		where dbx_no=#{dbx_no}
+	</select>
+	
+	<update id="insertDbx" parameterType="dbx">
+		insert 
+		into
+		dbx(DBX_NO,EMPNO,DBX_SE,SJ,RGSDE,EMP_NM,CN)
+		values
+		(#{dbx_no},#{empno},'E001',#{sj},sysdate,#{emp_nm},#{cn})
+	</update>
+	
+	<update id="updateDbx" parameterType="dbx">
+		update 
+		DBX 
+		set 
+		sj=#{sj}, cn=#{cn}
+		where dbx_no=#{dbx_no}
+	</update>
+	
+	<update id="deleteDbx" parameterType="str">
+		delete 
+		from DBX 
+		where dbx_no=#{dbx_no}
+		and dbx_se = 'E001'
+	</update>
+	
+	<select id="selectDbxSeqNext" resultType="int">
+		select dbx_seq.nextval as dbx_no from dual
+	</select>
+</mapper>
+
+
+
+
+
+
+
+

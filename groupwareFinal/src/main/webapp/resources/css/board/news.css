@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+body {
+  padding: 10px 20px;
+}
+.menu-header {
+  display: inline;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px;
+}
+.this {
+  font-size: 16px;
+  font-weight: bold;
+  color: #004680;
+}
+.content-header {
+  border-bottom: 5px solid #004680;
+}
+.card-header {
+  margin-top: 20px;
+  border-bottom: none;
+}
+.card-body {
+  padding-top: 8px;
+}
+/* 버튼 */
+.btn-basic {
+  background: #004680;
+  color: white;
+  width: 90px;
+  padding: 8px;
+  border: 2px solid #004680;
+  border-radius: 0;
+  height: 38px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.btn-basic:hover {
+  background: white;
+}
+/* 검색바 */
+.input-group {
+  width: 600px;
+  left: -60px;
+}
+.form-control {
+  padding: 8px 12px;
+  height: 38px;
+  font-size: 14px;
+}
+.search-bar {
+  width: 200px;
+}
+/* 테이블 */
+th {
+  background: #EFEFEF;
+}
+td {
+  color: #556278;
+}
+#boardTitle {
+  text-align:left;
+  max-width: 100px; 
+  overflow: hidden; 
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
+  cursor:pointer;
+}
+#boardTitle:hover {
+  color: #59BEE9;
+}
+.card-footer {
+  background: white;
+}
+.page-item.active .page-link {
+  background: #004680;
+  border-color: #004680;
+}
+.page-link {
+  color: #004680;
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Atch-Mapper">
+	<select id="selectAtchByBbscttNo" resultType="atch">
+		select * 
+		from atch_mnfl
+		where bbsctt_no = #{bbsctt_no}
+		order by atch_order asc
+	</select>	
+	
+	<select id="selectAtchByFileNo" resultType="atch">
+		select *
+		from atch_mnfl
+		where file_no=#{file_no}
+		order by atch_order asc
+	</select>
+	
+	<update id="insertAtch">
+		insert into 
+		atch_mnfl (file_no, file_nm , file_type, bbsctt_no, atch_order,uploadpath)
+		values (concat('atch',atch_seq.nextval), #{file_nm}, #{file_type},#{bbsctt_no},#{atch_order},#{uploadpath} )
+	</update>
+	
+	<update id="deleteAtch">
+		delete from atch_mnfl where file_no = #{file_no}
+	</update>
+	
+	<update id="deleteAllAtch">
+		delete from atch_mnfl where bbsctt_no = #{bbsctt_no}
+	</update>
+</mapper>

@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+/* 팝업창 전용 div 컨테이너 */
+.pop-container {
+  height:auto; 
+  margin: 20px;
+
+}
+body {
+  background: #EFEFEF;
+}

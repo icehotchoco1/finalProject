@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+<!-- DAO -->
+	<bean id="icommuteDAO" class="kr.or.gw.dao.IcommuteDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+	<bean id="approvalAdboxDAO" class="kr.or.gw.dao.ApprovalAdboxDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+	<bean id="approvalSettingDAO" class="kr.or.gw.dao.ApprovalSettingDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+
+
+<!-- Service -->
+	<bean id="icommuteService" class="kr.or.gw.service.IcommuteServiceImpl"
+		p:icommuteDAO-ref="icommuteDAO" />			
+			
+	<bean id="approvalAdboxService" class="kr.or.gw.service.ApprovalAdboxServiceImpl"
+		p:approvalAdboxDAO-ref="approvalAdboxDAO" />
+	<bean id="approvalSettingService" class="kr.or.gw.service.ApprovalSettingServiceImpl"
+		p:approvalSettingDAO-ref="approvalSettingDAO" />
+</beans>

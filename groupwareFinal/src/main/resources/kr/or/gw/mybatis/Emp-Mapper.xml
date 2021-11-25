@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Emp-Mapper">
+
+	<sql id="search">
+		<if test="searchType == 'i'.toString()">
+			and id like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'p'.toString()">
+			and phone like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'e'.toString()">
+			and email like '%'||#{keyword}||'%'
+		</if>
+	</sql>
+
+	<select id="selectEmpList" resultType="emp">
+		select *
+		from
+		ORGNZT_EMP_MNGT
+	</select>
+
+	<select id="selectSearchEmpList" resultType="emp">
+		select
+		*
+		from ORGNZT_EMP_MNGT
+		where EMPNO is not null
+		<include refid="search" />
+		order by ENCPN desc
+	</select>
+
+	<select id="selectSearchEmpListCount" resultType="int">
+		select
+		count(*)
+		from ORGNZT_EMP_MNGT
+		where EMPNO is not null
+		<include refid="search" />
+	</select>
+
+
+	<select id="selectEmpByEmpno" parameterType="int"
+		resultType="emp">
+		select
+		*
+		from ORGNZT_EMP_MNGT
+		where EMPNO=#{EMPNO}
+	</select>
+
+	<update id="insertEmp" parameterType="emp">
+		insert into
+		ORGNZT_EMP_MNGT(EMPNO)
+		values(#{EMPNO})
+	</update>
+
+	<update id="updateEmp" parameterType="emp">
+		update ORGNZT_EMP_MNGT
+		set
+		pwd=#{pwd},email=#{email},phone=#{phone},name=#{name},picture=#{picture}
+
+		<if test="authority != null">
+			,authority=#{authority}
+		</if>
+
+		where EMPNO=#{EMPNO}
+	</update>
+
+
+	<update id="deleteEmp" parameterType="str">
+		delete
+		from ORGNZT_EMP_MNGT
+		where EMPNO=#{EMPNO}
+	</update>
+
+	<update id="disabledEmp">
+		update ORGNZT_EMP_MNGT
+		set ACTVTY_AT=0
+		where EMPNO=#{EMPNO}
+	</update>
+
+	<update id="enabledEmp">
+		update ORGNZT_EMP_MNGT
+		set ACTVTY_AT=1
+		where
+		EMPNO=#{EMPNO}
+	</update>
+
+	<update id="modifyPw">
+	update ORGNZT_EMP_MNGT
+	set password=#{password},
+	author_code=#{author_code}
+	where EMPNO=#{empno}
+	</update>
+	
+	<!--로그인화면 비밀번호변경  -->
+	<update id="modifyPwMain">
+	update ORGNZT_EMP_MNGT
+	set password=#{password},
+	where EMPNO=#{empno}
+	</update>
+	
+	<update id="registSign">
+		insert into
+		ORGNZT_EMP_MNGT(sanctn_sign)
+		values(#{sanctn_sign})
+		where EMPNO=#{empno}
+	</update>
+
+ 	<update id="updateSign">
+		update ORGNZT_EMP_MNGT
+		set sanctn_sign=#{sanctn_sign}
+		where EMPNO=#{empno}
+	</update> 
+	
+	<select id="selectSign">
+		select SANCTN_SIGN
+		from ORGNZT_EMP_MNGT 
+		where empno = #{empno}
+	</select>
+	
+	<select id="getDeptPeople" parameterType="str" resultType="emp">
+		select *
+		from ORGNZT_EMP_MNGT 
+		where dept_code = #{dept_code}
+	</select>
+	
+</mapper>

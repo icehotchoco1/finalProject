@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EscMngt-Mapper">
+	
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+	</sql>
+	<sql id="erfType">
+		<if test="erfType == 'erf1'.toString()">
+			and (
+				form_no = 'erf1'
+			)			
+		</if>
+		<if test="erfType == 'erf2'.toString()">
+			and (
+				form_no = 'erf2'
+			)			
+		</if>
+		<if test="erfType == 'erf3'.toString()">
+		and (
+				form_no = 'erf3'
+			)			
+		</if>
+		<if test="erfType == 'erf4'.toString()">
+			and (
+				form_no = 'erf4'
+			)			
+		</if>
+		<if test="erfType == 'erf5'.toString()">
+			and (
+				form_no = 'erf5'
+			)			
+		</if>
+		<if test="erfType == 'erf6'.toString()">
+			and (
+				form_no = 'erf6'
+			)			
+		</if>
+		<if test="erfType == 'erf7'.toString()">
+			and (
+				form_no = 'erf7'
+			)			
+		</if>
+		<if test="erfType == 'all'.toString()">
+			and (
+				form_no is not null
+			)			
+		</if>
+
+	</sql>
+	
+	<resultMap type="erf" id="erf">
+	  <result column="form_no" property="form_no" />
+	  <result column="form_nm" property="form_nm" />
+	  <result column="form_cn" property="form_cn" />
+	  <result column="se" property="se" />
+	</resultMap>
+	
+	<resultMap type="escMngt" id="escMngt">
+	  <result column="sanctn_no" property="sanctn_no"/>
+	  <result column="form_no" property="form_no"/>
+	  <result column="empno" property="empno"/>
+	  <result column="sj" property="sj"/>
+	  <result column="cn" property="cn"/>
+	  <result column="scrty_grad" property="scrty_grad"/>
+	  <result column="prsrv_pd" property="prsrv_pd"/>
+	  <result column="rgsde" property="rgsde"/>
+	  <result column="sanctn_tmlmt" property="sanctn_tmlmt"/>
+	  <result column="ipcr_code" property="ipcr_code"/>
+	  <result column="sttus_code" property="sttus_code"/>
+	  <result column="bgnde" property="bgnde"/>
+	  <result column="endde" property="endde"/>
+	  <result column="return_reason" property="return_reason"/>
+	  
+	  <collection property="erf" resultMap="erf"></collection>
+	</resultMap>
+	
+	<select id="selectEscMngtPlusErf" resultMap="escMngt">
+		select a.form_cn, b.*
+		from eccst_regstr_form a, eccst_sanctn_mngt b
+		where a.form_no = b.form_no
+		and b.sanctn_no = #{sanctn_no}
+		and b.Sttus_Code = 'G004'
+	</select>
+	
+	<select id="selectSearchEscMngtList" parameterType="int" resultType="escMngt">
+        select a.sanctn_no,
+		        (select form_nm
+		        from Eccst_Regstr_Form b
+		        where a.form_no = b.form_no) as form_no,
+		        empno,
+		        sj,
+		        cn,
+		        scrty_grad,
+		        prsrv_pd,
+		        rgsde,
+		        sanctn_tmlmt,
+		        (select code_dc
+		        from code c
+		        where a.ipcr_code = c.code_no) as ipcr_code,
+		        sttus_code,
+		        bgnde,
+		        endde,
+		        return_reason,
+		        nm
+        from Eccst_Sanctn_Mngt a
+        where sanctn_no is not null
+        and sttus_code = 'G004'
+        and empno = #{empno}
+		<include refid="search" />
+		<include refid="erfType" />
+		order by lpad(a.sanctn_no, 20, 0) desc	
+	</select>
+	<select id="selectSearchEscMngtListCount" parameterType="int" resultType="int">
+		select
+		count(*) 
+		from Eccst_Sanctn_Mngt
+		where sanctn_no is not null
+		and sttus_code = 'G004'
+		and empno = #{empno}
+		<include refid="search" />
+		<include refid="erfType" />
+		order by lpad(sanctn_no, 20, 0) desc	
+		
+	</select>
+		
+	<select id="selectEscMngtList" resultType="escMngt">
+		select a.form_nm, b.*
+		from eccst_regstr_form a, eccst_sanctn_mngt b
+		where a.form_no = b.form_no
+		and b.sttus_code = 'G004'
+		order by b.sanctn_no desc		
+	</select>
+	<select id="selectEscMngtByNo" parameterType="str" resultType="escMngt">
+		select 
+		* 
+		from eccst_sanctn_mngt
+		where sanctn_no=#{sanctn_no}
+		and sttus_code = 'G004'
+	</select>
+	
+	<update id="updateEscMngt" parameterType="escMngt">
+		update eccst_sanctn_mngt 
+		set 
+		sj=#{sj}
+		where sanctn_no=#{sanctn_no}
+		and sttus_code = 'G004'
+	</update>
+	
+	<update id="deleteEscMngt" parameterType="str" >
+		delete 
+		from eccst_sanctn_mngt 
+		where sanctn_no=#{sanctn_no}
+		and sttus_code = 'G004'	
+	</update>
+	
+	<select id="selectEscMngtVacByNo" parameterType="str" resultType="escMngt">
+		select 
+		* 
+		from eccst_sanctn_mngt
+		where sanctn_no=#{sanctn_no}
+	</select>
+	
+</mapper>

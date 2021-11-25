@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- dao -->
+	<bean id="allbbsDAO" class="kr.or.gw.dao.AllbbsDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+	
+	<bean id="codeDAO" class="kr.or.gw.dao.CodeDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+		
+	<bean id="treeEmpDAO" class="kr.or.gw.dao.TreeEmpDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+	
+	<bean id="ebkmkDAO" class="kr.or.gw.dao.EbkmkDAOImpl"
+		p:sqlSession-ref="sqlSession"/>
+	
+	<bean id="scnerDAO" class="kr.or.gw.dao.ScnerDAOImpl"
+	p:sqlSession-ref="sqlSession"/>
+	
+	<bean id="scmngtDAO" class="kr.or.gw.dao.ScmngtDAOImpl"
+	p:sqlSession-ref="sqlSession"/>
+	
+	<bean id="escSetupDAO" class="kr.or.gw.dao.EscSetupDAOImpl"
+	p:sqlSession-ref="sqlSession"/>
+	
+	<!-- service -->			
+	<bean id="allbbsService" class="kr.or.gw.service.AllbbsServiceImpl"
+		p:allbbsDAO-ref="allbbsDAO"
+		p:atchDAO-ref="atchDAO"/> 
+
+	<bean id="codeService" class="kr.or.gw.service.CodeServiceImpl"
+			p:codeDAO-ref="codeDAO"/> 
+			
+	<bean id="treeEmpService" class="kr.or.gw.service.TreeEmpServiceImpl"
+			p:treeEmpDAO-ref="treeEmpDAO"
+			/> 
+			
+	<bean id="ebkmkService" class="kr.or.gw.service.EbkmkServiceImpl"
+		p:ebkmkDAO-ref="ebkmkDAO"/>
+		
+	<bean id="scnerService" class="kr.or.gw.service.ScnerServiceImpl"
+		p:scnerDAO-ref="scnerDAO"/>	
+		
+	<bean id="scmngtService" class="kr.or.gw.service.ScmngtServiceImpl"
+		p:scmngtDAO-ref="scmngtDAO"
+		p:atchDAO-ref="atchDAO"/>
+		
+	<bean id="escSetupService" class="kr.or.gw.service.EscSetupServiceImpl"
+		p:escSetupDAO-ref="escSetupDAO"/>
+</beans>

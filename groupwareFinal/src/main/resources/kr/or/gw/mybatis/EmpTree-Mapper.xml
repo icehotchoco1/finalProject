@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="EmpTree-Mapper">
+	
+	<sql id="search">	
+		<if test="searchType == 'n'.toString()">
+			and nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'p'.toString()">
+			and cttpc like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'np'.toString()">
+			and 
+			(cttpc like '%'||#{keyword}||'%'	
+			or
+			nm like '%'||#{keyword}||'%')	
+		</if>
+	</sql>
+	<sql id="deptType">
+		<if test="deptType == 'B001'.toString()">
+			and (
+				dept_code = 'B001'
+			)			
+		</if>
+		<if test="deptType == 'B002'.toString()">
+			and (
+				dept_code = 'B002'
+			)			
+		</if>
+		<if test="deptType == 'B003'.toString()">
+		and (
+				dept_code = 'B003'
+			)			
+		</if>
+		<if test="deptType == 'B004'.toString()">
+			and (
+				dept_code = 'B004'
+			)			
+		</if>
+		<if test="deptType == 'B005'.toString()">
+			and (
+				dept_code = 'B005'
+			)			
+		</if>
+		<if test="deptType == 'B006'.toString()">
+			and (
+				dept_code = 'B006'
+			)			
+		</if>
+		<if test="deptType == 'all'.toString()">
+			and (
+				dept_code is not null
+			)			
+		</if>
+		
+	</sql>
+	
+	<select id="selectSearchEmpList" resultType="emp">  
+          select empno,
+                nm,
+                cttpc,
+                fxnum,
+                dept_code,
+                substr(clsf_code,6) as clsf_code,
+                rspofc_code,
+                encpn,
+                retire_de,
+                password,
+                sanctn_sign,
+                sanctn_password,
+                actvty_at,
+                ip_adres,
+                email_adres,
+                author_code,
+                face_photo
+          from(
+            select a.empno,
+          nm,
+          cttpc,
+          fxnum,
+        (select code_dc 
+          from code b
+          where a.dept_code = b.code_no
+          ) as dept_code,
+         (select code_no||' '||code_dc
+            from code b
+            where a.clsf_code = b.code_no) as clsf_code,
+        (select code_dc
+        from code b
+        where a.rspofc_code = b.code_no) as rspofc_code,
+        encpn,
+        retire_de,
+        password,
+        sanctn_sign,
+        sanctn_password,
+        actvty_at,
+        ip_adres,
+        email_adres,
+        author_code,
+        face_photo
+          
+    from orgnzt_emp_mngt a
+    where 1=1
+        <include refid="search" />
+		<include refid="deptType"/>
+    order by clsf_code desc
+    )
+	</select>
+	
+	<select id="selectSearchEmpListCount" resultType="int">
+		select
+		count(*) 
+		from ORGNZT_EMP_MNGT
+		where 1=1
+		<include refid="search" />
+		<include refid="deptType"/>
+	</select>
+	
+	
+	<select id="selectEmpByEmpno" parameterType="int" resultType="emp">
+  select a.empno,
+          nm,
+          cttpc,
+          fxnum,
+        (select code_dc 
+          from code b
+          where a.dept_code = b.code_no
+          ) as dept_code,
+         (select code_dc
+            from code b
+            where a.clsf_code = b.code_no) as clsf_code,
+        (select code_dc
+        from code b
+        where a.rspofc_code = b.code_no) as rspofc_code,
+        encpn,
+        retire_de,
+        password,
+        sanctn_sign,
+        sanctn_password,
+        actvty_at,
+        ip_adres,
+        email_adres,
+        author_code,
+        face_photo
+          
+    from orgnzt_emp_mngt a
+    where empno=#{empno}
+	</select>
+	
+	<update id="insertEmp" parameterType="emp">
+		insert into 
+		orgnzt_emp_mngt (empno,nm,cttpc,fxnum,dept_code,clsf_code,rspofc_code,encpn,password,actvty_at,ip_adres,email_adres,author_code,face_photo)
+		values(#{empno},#{nm},#{cttpc},#{fxnum},#{dept_code},#{clsf_code},#{rspofc_code},#{encpn},#{password},1,#{ip_adres},#{email_adres},'ROLE_TEMP',#{face_photo})
+	</update>
+	
+	
+	<update id="updateEmp" parameterType="emp">
+		update orgnzt_emp_mngt 
+		set nm=#{nm},cttpc=#{cttpc},fxnum=#{fxnum},dept_code=#{dept_code},clsf_code=#{clsf_code},rspofc_code=#{rspofc_code},password=#{password},ip_adres=#{ip_adres},email_adres=#{email_adres},author_code=#{author_code},face_photo=#{face_photo}
+		where empno=#{empno}
+	</update>
+	
+	
+	<update id="deleteEmp" parameterType="str" >
+		delete 
+		from orgnzt_emp_mngt 
+		where empno=#{empno}		
+	</update>
+	
+	<update id="disabledEmp" >
+		update orgnzt_emp_mngt
+		set actvty_at=0
+		where empno=#{empno}
+	</update>
+	
+	<update id="enabledEmp">
+		update orgnzt_emp_mngt
+		set actvty_at=1
+		where empno=#{empno}
+	</update>
+	
+</mapper>

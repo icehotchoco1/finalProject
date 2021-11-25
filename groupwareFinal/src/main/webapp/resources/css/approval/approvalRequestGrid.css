@@ -1,0 +1,8 @@
+@charset "UTF-8";
+
+.card-success:not(.card-outline)>.card-header {
+    background-color: #004680;
+}
+.card-success:not(.card-outline)>.card-body {
+   height: 100px;
+}

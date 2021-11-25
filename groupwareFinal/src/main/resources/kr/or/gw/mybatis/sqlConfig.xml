@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+
+<configuration>
+
+		
+	<typeAliases>
+		<typeAlias type="java.lang.String" alias="str" />
+		<typeAlias type="java.lang.Integer" alias="int" />
+		
+		<typeAlias type="kr.or.gw.dto.OrgnztEmpMngtVO" alias="emp"/>	
+		<typeAlias type="kr.or.gw.dto.BbsCmpnyDsptchVO" alias="news"/>
+		<typeAlias type="kr.or.gw.dto.BbsMngtbdVO" alias="mngt"/>
+		<typeAlias type="kr.or.gw.dto.BbsNtbdVO" alias="notice"/>
+		<typeAlias type="kr.or.gw.dto.MenuVO" alias="menu"/>
+		<typeAlias type="kr.or.gw.dto.DbxVO" alias="dbx"/>
+		<typeAlias type="kr.or.gw.dto.BbsCtsnnbdVO" alias="ctsn"/>
+		<typeAlias type="kr.or.gw.dto.BbsFreebdVO" alias="free"/>
+		<typeAlias type="kr.or.gw.dto.AtchMnflVO" alias="atch"/>
+		<typeAlias type="kr.or.gw.dto.EccstRegstrFormVO" alias="erf"/>
+		<typeAlias type="kr.or.gw.dto.DclzMngtVO" alias="dclz"/>
+		<typeAlias type="kr.or.gw.dto.DclzComVO" alias="dclzCom"/>
+		<typeAlias type="kr.or.gw.dto.SchdulMngtVO" alias="schm"/>
+		<typeAlias type="kr.or.gw.dto.JobMngtVO" alias="jobMngt"/>
+		<typeAlias type="kr.or.gw.dto.AllbbsVO" alias="allbbs"/>
+		<typeAlias type="kr.or.gw.dto.EccstSanctnMngtVO" alias="escMngt"/>
+		<typeAlias type="kr.or.gw.dto.JobRcvVO" alias="jobRcv"/>
+		<typeAlias type="kr.or.gw.dto.JobAnswerVO" alias="jobAns"/>
+		<typeAlias type="kr.or.gw.dto.CodeVO" alias="code"/>
+		<typeAlias type="kr.or.gw.dto.EccstDbxVO" alias="escDbx"/>
+		<typeAlias type="kr.or.gw.dto.DbxCocnrVO" alias="dbxCcr"/>
+		<typeAlias type="kr.or.gw.dto.EccstBkmkSanctnLnVO" alias="ebkmk"/>
+		<typeAlias type="kr.or.gw.dto.EccstBkmkSanctnLnDtlsVO" alias="ebkmkdtls"/>
+		<typeAlias type="kr.or.gw.dto.EccstSanctnMngtVO" alias="scmngt"/>
+		<typeAlias type="kr.or.gw.dto.EccstSanctnerVO" alias="scner"/>
+		<typeAlias type="kr.or.gw.dto.DclzVacVO" alias="dclzVac"/>
+		<typeAlias type="kr.or.gw.dto.DclzVacCodeVO" alias="dclzVacCode"/>
+		<typeAlias type="kr.or.gw.dto.NtcnVO" alias="ntcn"/>
+		<typeAlias type="kr.or.gw.dto.NtcnRcverVO" alias="ntcnRcver"/>
+		<typeAlias type="kr.or.gw.dto.EccstEnvrnSetupVO" alias="escSetup"/>
+		
+	</typeAliases>			
+	
+</configuration>
+
+
+
+
+
+

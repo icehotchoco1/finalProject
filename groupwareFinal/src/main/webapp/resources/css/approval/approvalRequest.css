@@ -1,0 +1,159 @@
+@charset "UTF-8";
+
+
+p {
+  color:grey;
+  font-family: 'Gowun Dodum', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+aside p {
+  color:grey;
+  font-family: 'Gowun Dodum', sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+}
+.card-title {
+  font-family: 'Gowun Dodum', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+}
+.font-basic{
+  font-family: 'Gowun Dodum', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+.badge-danger {
+  background-color: #58A176;
+}
+.badge-warning {
+  background-color: #F8D69A;
+}
+/* a:visited {text-decoration: none; color:#F7F6ED;} */
+div#main-container{
+  background : white;
+  width : 100%;
+}
+ul.tabs{
+  margin: 0px;
+  padding-left: 35%;
+  list-style: none;
+}
+ul.tabs li{ 
+  background-color: white;
+  display: inline-block;
+  padding: 5px 10px;
+  cursor: pointer;
+  width: 143px;
+  font-family: 'Gowun Dodum', sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+}
+ul.tabs li>a{
+  color:black;
+  padding-left:5px;
+}
+ul.tabs li>span{
+  float: right;
+  margin-top: 2px;
+}
+ul.tabs li.current{
+  background: #004680;
+}
+ul.tabs li.current a{
+   color:white;
+}
+.tab-content{
+  display: none;  
+  padding: 15px 0;
+ /*border-top:3px solid #eee;*/
+  font-family: 'Gowun Dodum', sans-serif;
+  font-size: 14px;
+}
+
+.tab-content.current{
+  display: inherit;
+}
+
+
+body {
+  padding: 10px 20px;
+}
+.menu-header {
+  display: inline;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px;
+}
+.this {
+  font-size: 16px;
+  font-weight: bold;
+  color: #004680;
+}
+.content-header {
+  border-bottom: 5px solid #004680;
+}
+.card-header {
+  margin-top: 20px;
+  border-bottom: none;
+}
+.card-body {
+  padding-top: 8px;
+    height: 550px;
+}
+
+.btn-basic {
+  background: #004680;
+  color: white;
+  width: 90px;
+  padding: 8px;
+  border: 2px solid #004680;
+  border-radius: 0;
+  height: 38px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.btn-basic:hover {
+  background: white;
+}
+/* 검색바 */
+.input-group {
+  width: 600px;
+  left: -60px;
+}
+.form-control {
+  padding: 8px 12px;
+  height: 38px;
+  font-size: 14px;
+}
+.search-bar {
+  width: 200px;
+}
+/* 테이블 */
+th {
+  background: #EFEFEF;
+}
+td {
+  color: #556278;
+}
+#title {
+  text-align:left;
+  max-width: 100px; 
+  overflow: hidden; 
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
+  cursor:pointer;
+}
+#title:hover {
+  color: #59BEE9;
+}
+.card-footer {
+  background: white;
+}
+.page-item.active .page-link {
+  background: #004680;
+  border-color: #004680;
+}
+.page-link {
+  color: #004680;
+}

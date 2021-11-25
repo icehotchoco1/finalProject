@@ -1,0 +1,251 @@
+@charset "UTF-8";
+
+body {
+	background: url(<%=request.getContextPath()%>/resources/css/common/img/loginForm.png)
+	no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+}
+
+#button1:hover {
+	background-color: rgba(255, 255, 255, 1);
+	color: black;
+}
+
+#button2:hover {
+	background-color: rgba(255, 255, 255, 1);
+	color: black;
+}
+
+.pwlogin {
+	padding: 130px;
+	background: rgba(240, 240, 240, 0.5);
+	margin: 0 auto;
+	text-align: center;
+}
+
+.facelogin {
+	padding: 130px;
+	background: rgba(240, 240, 240, 0.5);
+	margin: 0 auto;
+	text-align: center;
+}
+
+#button1 {
+	margin: 0 auto;
+	background-color: #004680;
+	border: none;
+	color: white;
+	padding: 15px 50px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0.8;
+	font-family: 'Do Hyeon', sans-serif;
+}
+
+#button2 {
+	font-family: 'Do Hyeon', sans-serif;
+	background-color: #004680;
+	border: none;
+	color: white;
+	padding: 15px 50px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+.btn-basic{
+	background-color: #004680;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	width: 100%;
+	height: 50px;
+	font-size: 16pt;
+	margin-top: 100px;
+	font-family: 'Do Hyeon', sans-serif;
+}
+/* 모달 */
+#my_modal {
+	display: none;
+	width: 400px;
+	padding: 30px 60px;
+	background-color: #fefefe;
+	border: 1px solid #888;
+	border-radius: 3px;
+}
+
+#my_modal2 {
+	display: none;
+	width: 500px;
+	padding: 30px 60px;
+	background-color: #fefefe;
+	border: 1px solid #888;
+	border-radius: 3px;
+}
+#my_modal3 {
+	display: none;
+	width: 500px;
+	padding: 30px 60px;
+	background-color: #fefefe;
+	border: 1px solid #888;
+	border-radius: 3px;
+}
+
+#my_modal .modal_close_btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	color: #004680;
+}
+
+#my_modal2 .modal_close_btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	color: #004680;
+}
+#my_modal3 .modal_close_btn {
+  	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	color: #004680;
+}
+
+
+/* 비밀번호 로그인폼 */
+header {
+	display: flex;
+	justify-content: center;
+}
+
+form {
+	padding: 10px;
+}
+
+.input-box {
+	position: relative;
+	margin: 10px 0;
+}
+
+.input-box>input {
+	background: transparent;
+	border: none;
+	border-bottom: solid 1px #ccc;
+	padding: 20px 0px 5px 0px;
+	font-family: 'Do Hyeon', sans-serif;
+	font-size: 14pt;
+	width: 100%;
+
+}
+
+input::placeholder {
+	color: transparent;
+}
+
+input:placeholder-shown+label {
+	color: #aaa;
+	font-size: 18px;
+	top: 15px;
+}
+
+input:focus+label, label {
+	color: #8aa1a1;
+	font-size: 14px;
+	pointer-events: none;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	transition: all 0.2s ease;
+	-webkit-transition: all 0.2s ease;
+	-moz-transition: all 0.2s ease;
+	-o-transition: all 0.2s ease;
+}
+
+input[type=submit] {
+	background-color: #004680;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	width: 100%;
+	height: 50px;
+	font-size: 16pt;
+	margin-top: 100px;
+	font-family: 'Do Hyeon', sans-serif;
+}
+
+#forgot {
+	text-align: right;
+	font-size: 15px;
+	color: #004680;
+	margin: 10px 0px;
+	cursor: pointer;
+}
+
+header>h2 {
+	font-family: 'Do Hyeon', sans-serif;
+	font-size: 23px;
+	font-weight: bold;
+}
+
+label {
+	font-size: 13px;
+}
+
+.row {
+	margin-top: 30%;
+}
+
+/* 얼굴인식모달 버튼들  */
+
+#btSub {
+background-color: #004680;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	width: 100%;
+	height: 50px;
+	font-size: 13pt;
+	margin-top: 14px;
+	font-family: 'Do Hyeon', sans-serif;
+}
+
+#pic {
+background-color: #004680;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	width: 100%;
+	height: 50px;
+	font-size: 13pt;
+	margin-top: 14px;
+	font-family: 'Do Hyeon', sans-serif;
+}
+
+#video {
+background-color: #004680;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	width: 100%;
+	height: 50px;
+	font-size: 13pt;
+	margin-top: 14px;
+	font-family: 'Do Hyeon', sans-serif;
+}
+
+#box1{
+margin-top: 0%;
+
+}
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Erf-Mapper">
+	
+	
+	<select id="selectErfList" resultType="erf">
+		select * 
+		from eccst_regstr_form		
+	</select>
+	
+	<select id="selectErfByErfno"  resultType="erf">
+		select * 
+		from eccst_regstr_form
+		where form_no=#{form_no}
+	</select>
+	
+	<update id="insertErf" parameterType="erf">
+		insert 
+		into
+		eccst_regstr_form (form_no,form_nm,form_cn,se,form_style)
+		values
+		('erf'||erf_seq.nextval,#{form_nm},#{form_cn},#{se},#{form_style})
+	</update>
+	
+	
+	<select id="selectErfSeqNext" resultType="int">
+		select erf_seq.nextval as form_no from dual
+	</select>
+</mapper>
+
+
+
+
+
+
+
+

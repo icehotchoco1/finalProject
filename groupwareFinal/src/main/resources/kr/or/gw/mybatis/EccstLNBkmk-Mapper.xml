@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EccstLNBkmk-Mapper">
+
+	<select id="selectBkmkList" resultType="ebkmk">
+        select 
+        bkmk_no,rgstr_empno,
+        (select form_nm
+        from eccst_regstr_form b
+        where a.form_no = b.form_no
+        ) as form_no,
+        bkmk_sj,
+        bkmk_info 
+        from
+        eccst_bkmk_sanctn_ln a
+        where rgstr_empno = #{rgstr_empno}	
+        order by to_number(substr(bkmk_no,5)) desc
+	</select>
+	
+	<select id="selectBkmkListDetail" resultType="ebkmkdtls">
+        select * from
+        eccst_bkmk_sanctn_ln_dtls
+        where bkmk_no = #{bkmk_no}
+        order by to_number(substr(dtls_no,5)) desc
+	</select>
+	
+	<update id="deleteBkmk" >
+		delete from eccst_bkmk_sanctn_ln where  bkmk_no = #{bkmk_no}
+	</update>
+	
+	<update id="deleteBkmkDtls" >
+		delete from eccst_bkmk_sanctn_ln_dtls where  bkmk_no = #{bkmk_no}
+	</update>
+	
+	
+	
+	<update id="insertBkmk" parameterType="ebkmk"> 
+		insert into
+        eccst_bkmk_sanctn_ln
+        values(#{bkmk_no},#{rgstr_empno},#{form_no},#{bkmk_sj},#{bkmk_info})
+	</update>
+	
+	<update id="insertBkmkDtls" parameterType="ebkmk"> 
+		insert into
+        eccst_bkmk_sanctn_ln_dtls
+        values(CONCAT('LNDT',  ECCST_BKMK_SANCTN_LN_DTLS_SEQ.nextval),#{bkmk_no},#{saved_empno},#{ln_no},#{form_no})
+	</update>
+
+	<select id="getbkmkSeq" resultType="int">
+        select eccst_bkmk_sanctn_ln_seq.nextval from dual	
+    </select>
+
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Mngt-Mapper">
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and cn like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and (
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+	</sql>
+	
+	<select id="selectSearchMngtList" resultType="mngt">
+		select
+		*
+		from
+		bbs_mngtbd
+		where bbsctt_no is not null
+		<include refid="search" />
+		order by rgsde desc
+	</select>
+
+	<select id="selectSearchMngtListCount" resultType="int">
+		select
+		count(*)
+		from
+		bbs_mngtbd
+		where bbsctt_no is not null
+		<include refid="search" />
+		order by rgsde desc
+	</select>
+
+	<select id="selectMngtList" resultType="mngt">
+		select *
+		from bbs_mngtbd
+		order by bbsctt_no desc
+	</select>
+
+	<select id="selectMngtByBbscttNo" resultType="mngt">
+		select *
+		from bbs_mngtbd
+		where bbsctt_no=#{bbsctt_no}
+	</select>
+
+	<update id="insertMngt" parameterType="mngt">
+		insert
+		into
+		bbs_mngtbd(bbsctt_no,sj,rgsde,emp_nm,cn,empno)
+		values
+		( #{bbsctt_no},#{sj},sysdate,#{emp_nm},#{cn},#{empno})
+	</update>
+
+	<update id="updateMngt" parameterType="mngt">
+		update bbs_mngtbd
+		set
+		sj=#{sj}, cn=#{cn}
+		where bbsctt_no= #{bbsctt_no}
+	</update>
+
+
+	<update id="deleteMngt" parameterType="str">
+		delete
+		from bbs_mngtbd
+		where bbsctt_no=#{bbsctt_no}
+	</update>
+
+	<update id="increaseViewCnt" parameterType="str">
+		update BBS_MNGTBD
+		set
+		rdcnt=rdcnt+1
+		where bbsctt_no=#{bbsctt_no}
+	</update>
+
+	<select id="selectMngtSeqNext" resultType="int">
+		select
+		mngt_seq.nextval as bbsctt_no from dual
+	</select>
+</mapper>
+
+
+
+
+
+
+
+

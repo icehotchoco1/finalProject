@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Icommute-Mapper">
+
+
+<select id="selectIcommuteList" resultType="emp"  parameterType="java.util.Map">
+   select a.nm,
+        (select code_dc 
+          from code b
+          where a.dept_code = b.code_no
+          ) as dept_code , 
+          (select code_dc 
+          from code b
+          where a.clsf_code = b.code_no
+          ) as clsf_code,
+          d.attend_time as attend_time, 
+          d.lvffc_time as lvffc_time, 
+          (select code_dc
+          from code b
+          where d.sttus_code = b.code_no) as sttus_code,#{startDate}
+    from orgnzt_emp_mngt a, dclz_mngt d
+    where 
+    dept_code = (select dept_code from orgnzt_emp_mngt where empno=#{empno}) 
+    and clsf_code =(select clsf_code from orgnzt_emp_mngt where empno=#{empno})
+    and a.empno = d.empno
+ 	and to_char(d.attend_time,'yyyy-mm-dd')= #{startDate} 
+</select>
+
+<select id="selectIcommuteEmpList" resultType="emp">
+ select a.nm,
+        (select code_dc 
+          from code b
+          where a.dept_code = b.code_no
+          ) as dept_code , 
+          (select code_dc 
+          from code b
+          where a.clsf_code = b.code_no
+          ) as clsf_code
+    from orgnzt_emp_mngt a
+    where 
+    dept_code = (select dept_code from orgnzt_emp_mngt where empno=#{empno}) 
+    and clsf_code =(select clsf_code from orgnzt_emp_mngt where empno=#{empno})
+</select>
+	
+</mapper>

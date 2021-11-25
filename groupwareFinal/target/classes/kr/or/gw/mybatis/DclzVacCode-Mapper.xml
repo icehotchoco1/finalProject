@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DclzVacCode-Mapper">
+	
+	<select id="selectVacCodeList" resultType="dclzVacCode">
+		select *
+		from dclz_vcatn_code
+	</select>
+	
+	<select id="selectVacCode" resultType="dclzVacCode">
+		select *
+		from dclz_vcatn_code
+		where vcatn_code=#{vcatn_code}
+	</select>
+	
+	<update id="insertVacCode" parameterType="dclzVac">
+		insert into
+		dclz_vcatn_code(vcatn_code, vcatn_daycnt, vcatn_nm)
+		values(#{vcatn_code},#{vcatn_daycnt},#{vcatn_nm})
+	</update>
+	
+	<select id="selectCodeNmByCode" resultType="str">
+		select vcatn_nm
+		from dclz_vcatn_code
+		where vcatn_code=#{vcatn_code}
+	</select>
+</mapper>

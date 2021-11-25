@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EscSetup-Mapper">
+	<select id="selectEscSetupByEmpno" parameterType="int" resultType="escSetup">
+		 select * from eccst_envrn_setup
+         where empno = #{empno}
+	</select>
+	
+	<update id="insertEscSetup" parameterType="escSetup">
+		insert into 
+		eccst_envrn_setup 
+		values(#{empno},#{drsc_setup},#{replc_sanctner_empno})
+	</update>
+	
+	<update id="updateEscSetup" parameterType="escSetup">
+		update eccst_envrn_setup 
+		set drsc_setup=#{drsc_setup},replc_sanctner_empno=#{replc_sanctner_empno}
+		where empno=#{empno}
+	</update>
+	
+</mapper>

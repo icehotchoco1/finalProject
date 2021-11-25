@@ -1,0 +1,227 @@
+@charset "UTF-8";
+
+body {
+	padding: 10px 20px;
+}
+
+.menu-header {
+	display: inline;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 8px;
+}
+
+.content-header {
+	border-bottom: 5px solid #004680;
+}
+
+.card-header {
+	margin-top: 20px;
+	border-bottom: none;
+}
+
+.card-body {
+	padding-top: 8px;
+}
+
+div .day {
+	display: none;
+}
+
+.hours , .minutes , .seconds , .text{
+	float: left;
+}
+
+.asdasdasd{
+	float: left;
+}
+
+/* 버튼 */
+.btn-basic {
+	background: #004680;
+	color: white;
+	width: 90px;
+	padding: 8px;
+	border: 2px solid #004680;
+	border-radius: 0;
+	height: 38px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+/* .btn-basic:hover {
+	background: white;
+}
+검색바
+.input-group {
+	width: 600px;
+	left: -60px;
+}
+
+.form-control {
+	padding: 8px 12px;
+	height: 38px;
+	font-size: 14px;
+}
+
+.search-bar {
+	width: 200px;
+} */
+/* 테이블 */
+th {
+	background: #EFEFEF;
+	text-align: center;
+}
+
+td {
+	color: #556278;
+	text-align: center;
+}
+ 
+.card-header{
+	background-color: #004680;
+	color: white;
+}
+.row{
+	font-size: 15px;
+}
+.attcolor {
+	color: #48a2de;
+}
+
+
+
+.hours, .minutes, .seconds, .text {
+	
+	display:inline;
+}
+
+ 
+
+
+#bt1{
+	
+}
+/* #boardTitle {
+	text-align: left;
+	max-width: 100px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
+
+
+#boardTitle:hover {
+	color: #59BEE9;
+}
+
+.card-footer {
+	background: white;
+}
+
+.page-item.active .page-link {
+	background: #004680;
+	border-color: #004680;
+}
+
+.page-link {
+	color: #004680;
+} */
+
+
+/*조회하는 박스  */
+.boxSearch {
+	width: 100%;
+	text-align: center;
+	padding-left: 300px;
+}
+ .whghl{
+	background: red;
+	color :white;
+	text-align: center;
+} 
+searchBox {
+	border: none
+}
+
+.searchBox tbody th {
+	padding: 20px 30px 20px 35px;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	/* 	vertical-align:top; */
+	border: none;
+	background: #004680;
+	color: white;
+}
+
+.searchBox tbody td {
+	padding: 12px 10px 12px 25px;
+	border: none;
+	background-color: #efefef;
+	color: black;
+}
+
+.searchDate {
+	overflow: hidden;
+	margin-bottom: 10px;
+	*zoom: 1
+}
+
+.searchDate:after {
+	display: block;
+	clear: both;
+	content: ''
+}
+
+.searchDate li {
+	position: relative;
+	float: left;
+	margin: 0 7px 0 0;
+	list-style: none; /* 점 안보이게 하는거ㅋㅋㅋ  */
+}
+
+.searchDate li .chkbox2 {
+	display: block;
+	text-align: center
+}
+
+.searchDate li .chkbox2 input {
+	position: absolute;
+	z-index: -1
+}
+
+.searchDate li .chkbox2 label {
+	display: block;
+	width: 72px;
+	height: 26px;
+	font-size: 14px;
+	font-weight: bold;
+	color: black;
+	text-align: center;
+	line-height: 25px;
+		text-decoration:none;
+	cursor: pointer;
+}
+
+.demi {
+	display: inline-block;
+	margin: 0 1px;
+	vertical-align: middle
+}
+
+.inpType {
+	padding-left: 6px;
+	height: 24px;
+	line-height: 24px;
+	border: 1px solid #dbdbdb
+}
+
+.btncalendar {
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+	text-indent: -999em
+}
+

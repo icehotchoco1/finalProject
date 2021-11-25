@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EscDbx-Mapper">
+	
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			)			
+		</if>
+	</sql>
+	
+	<!-- 중요도 -->
+	<sql id="ipcrcode">
+		<!-- 낮음 -->
+		<if test="ipcrcode == 'H001'.toString()">
+			and ipcrcode = 'H001'
+		</if>
+		<!-- 보통 -->
+		<if test="ipcrcode == 'H002'.toString()">
+			and ipcrcode ='H002'
+		</if>
+	</sql>
+	
+	
+	<sql id="formnm">
+		<if test="formnm == '근태신청서'.toString()">
+			and formnm = '근태신청서'
+		</if>
+		<if test="formnm == '휴가신청서'.toString()">
+			and formnm = '휴가신청서'
+		</if>
+		<if test="formnm == '연장근무신청서'.toString()">
+			and formnm = '연장근무신청서'
+		</if>
+		<if test="formnm == '일반품의서'.toString()">
+			and formnm = '일반품의서'
+		</if>
+		<if test="formnm == '이의신청서'.toString()">
+			and formnm = '이의신청서'
+		</if>
+		<if test="formnm == '지출결의서'.toString()">
+			and formnm = '지출결의서'
+		</if>
+		<if test="formnm == '지출품의서'.toString()">
+			and formnm = '지출품의서'
+		</if>
+	
+	</sql>
+	
+	<!-- 수신 참조함 -->
+	<select id="selectRdRcvList"	resultType="escMngt">
+		select * 
+		from eccst_sanctn_mngt
+		where sanctn_no in (select sanctn_no
+								from eccst_dbx
+								where rec_empno=#{rec_empno})
+		and sttus_code='G005'
+		<include refid="search" />
+		<include refid="ipcrcode" />
+	  	<include refid="formnm" />
+		order by sanctn_no desc
+	</select>
+
+	<select id="selectRdRcvListCount" resultType="int">
+		select count(*)
+		from eccst_sanctn_mngt
+		where sanctn_no in (select sanctn_no
+								from eccst_dbx
+								where rec_empno=#{rec_empno})
+		and sttus_code='G005'
+		<include refid="search" />
+		<include refid="ipcrcode" />
+	  	<include refid="formnm" />
+		order by sanctn_no desc
+	</select>
+	
+	
+	
+	<!-- 발신 참조함 -->
+	<select id="selectRdSendList"	resultType="escMngt">
+		select * 
+		from eccst_sanctn_mngt
+		where sanctn_no in (select sanctn_no
+								from eccst_dbx
+								where empno=#{empno})
+		and empno=#{empno}
+		and sttus_code='G005'
+		<include refid="search" />
+		<include refid="ipcrcode" />
+	  	<include refid="formnm" />
+		order by sanctn_no desc
+	</select>
+	
+	<select id="selectRdSendListCount"	resultType="int">
+		select count(*) 
+		from eccst_sanctn_mngt
+		where sanctn_no in (select sanctn_no
+								from eccst_dbx
+								where empno=#{empno})
+		and empno=#{empno}
+		and sttus_code='G005'
+		<include refid="search" />
+		<include refid="ipcrcode" />
+	  	<include refid="formnm" />
+		order by sanctn_no desc
+	</select>
+	
+	
+	<!-- 결재용 -->
+	
+	<select id="selectSeqNextVal" resultType="int">
+		select
+		eccst_dbx_seq.nextval as eccdbx_no from dual
+	</select>
+	
+	<update id="insertDbx" parameterType="escDbx">
+		insert into 
+		eccst_dbx
+		values(#{eccdbx_no},#{sanctn_no},#{empno},#{rec_empno})
+	</update>
+	
+	<select id="selecRefferers" resultType="escDbx">
+		select * from 
+		eccst_dbx
+		where sanctn_no=#{sanctn_no}
+	</select>
+	
+	
+	<update id="deleteDbx">
+		delete from eccst_dbx
+		where sanctn_no=#{sanctn_no}
+	</update>
+	
+	
+</mapper>

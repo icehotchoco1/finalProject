@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Mypage-Mapper">
+
+	<select id="selectCodeDcbyCodeNo" parameterType="str" resultType="str">
+		select code_dc
+		from code
+		where code_no = #{code_no}		
+	</select>
+
+	<select id="selectEmp" parameterType="int" resultType="emp">
+		select * 
+		from ORGNZT_EMP_MNGT
+		where empno=#{empno}
+	</select>
+
+	<select id="selectCheckInOutTime" parameterType="int" resultType="dclz">
+		select * 
+		  from (
+		        select *
+		          from dclz_mngt
+		         where empno = #{empno }
+		           and to_char(attend_time, 'yyyymmdd') = to_char(sysdate, 'yyyymmdd')
+		         order by attend_time
+		         )
+		  where rownum = 1	
+	</select>
+
+	<update id="modifyEmp" parameterType="emp">
+		update orgnzt_emp_mngt 
+		set 
+		email_adres=#{email_adres},cttpc=#{cttpc}
+		where empno=#{empno}
+	</update>
+
+	<update id="pwModify" parameterType="emp">
+		update orgnzt_emp_mngt 
+		set 
+		password=#{password}
+		where empno=#{empno}
+	</update>
+	
+	<!-- 이번 달 근태 상태별 횟수 조회 -->
+	<!-- 지각 -->
+	<select id="selectDclzMngtLateCount" parameterType="int" resultType="int">
+		select count(*) 
+		  from dclz_mngt
+		 where empno = #{empno}
+		   and to_char(attend_time, 'MM') = to_char(sysdate, 'MM')
+		   and sttus_code = 'F005'
+	</select>
+	<!-- 결근 -->
+	<select id="selectDclzMngtAbsentCount" parameterType="int" resultType="int">
+		select count(*) 
+		  from dclz_mngt
+		 where empno = #{empno}
+		   and to_char(attend_time, 'MM') = to_char(sysdate, 'MM')
+		   and sttus_code = 'F003'
+	</select>
+	<!-- 조기퇴근 -->
+	<select id="selectDclzMngtEarlieCkOutCount" parameterType="int" resultType="int">
+		select count(*) 
+		  from dclz_mngt
+		 where empno = #{empno}
+		   and to_char(attend_time, 'MM') = to_char(sysdate, 'MM')
+		   and sttus_code = 'F002'
+	</select>
+	<!-- 퇴근 미체크 -->
+	<select id="selectDclzMngtMissingCount" parameterType="int" resultType="int">
+		select count(*) 
+		  from dclz_mngt
+		 where empno = #{empno}
+		   and to_char(attend_time, 'MM') = to_char(sysdate, 'MM')
+		   and sttus_code = 'F004'
+	</select>
+	<!-- 정상출근 -->
+	<select id="selectDclzMngtWorkingDayCount" parameterType="int" resultType="int">
+		select count(*) 
+		  from dclz_mngt
+		 where empno = #{empno}
+		   and to_char(attend_time, 'MM') = to_char(sysdate, 'MM')
+		   and sttus_code = 'F001'
+	</select>
+	
+	<!-- 이번 달 근무 시간 및 분 -->
+	<select id="selectDclzMngtWorkingHrs" parameterType="int" resultType="str">
+	select case when sum(floor((LVFFC_TIME-attend_time) * 24 * 60)) - (sum(floor((LVFFC_TIME-attend_time) * 24)) * 60) <![CDATA[< 10]]>
+		then sum(floor((LVFFC_TIME-attend_time) * 24))	|| '0'  || to_char(sum(floor((LVFFC_TIME-attend_time) * 24 * 60)) - (sum(floor((LVFFC_TIME-attend_time) * 24)) * 60))
+		else sum(floor((LVFFC_TIME-attend_time) * 24)) || to_char(sum(floor((LVFFC_TIME-attend_time) * 24 * 60)) - (sum(floor((LVFFC_TIME-attend_time) * 24)) * 60))
+		end as hrs 
+	from dclz_mngt
+	where empno = #{empno}
+	and to_char(attend_time, 'YYMM') = to_char(sysdate, 'YYMM')
+	</select>
+	
+	<!-- 이번 달 오늘까지 평일 수 -->
+	<select id="selectWorkingDayCnt" resultType="int">
+		SELECT COUNT(*)
+		  FROM (
+		        WITH dt_w AS 
+		                (SELECT to_char(TO_DATE(st_dt, 'YYYYMMDD') + LEVEL - 1, 'YYYYMMDD') AS dt 
+		                   FROM ( SELECT to_char((SELECT TRUNC(sysdate, 'MM') FROM dual), 'yyyymmdd') AS st_dt,to_char((SELECT last_day(sysdate) FROM dual), 'yyyymmdd') AS end_dt FROM dual ) 
+		                 CONNECT BY LEVEL <![CDATA[<=]]> TO_DATE(end_dt, 'YYYYMMDD') - TO_DATE(st_dt, 'YYYYMMDD') + 1 ) 
+		        SELECT CASE WHEN to_char(TO_DATE(D.dt),'D') IN ('1','7') 
+		               THEN '주말' ELSE '평일' 
+		               END AS week_day 
+		          FROM dt_w D
+		         WHERE ROWNUM <![CDATA[<=]]> to_number(to_char(sysdate,'MM')) + 1)
+		 WHERE week_day = '평일'
+	</select>
+	
+	<!-- 연차별 발생 휴가 갯수 조회 -->
+	<select id="selectTotVacCnt" parameterType="int" resultType="int">
+		select case when (select to_number(to_char(sysdate, 'yyyy')) - to_number(to_char(encpn, 'yyyy')) from ORGNZT_EMP_MNGT where empno = #{empno}
+						) <![CDATA[<]]>  21 
+						            then (select vcatn_daycnt 
+						                    from dclz_vcatn_code
+						                   where to_number(replace(vcatn_code, 'VCDE')) <![CDATA[<=]]> 22
+						                     and to_number(replace(replace(vcatn_nm, '년차'), '이상')) = (select to_number(to_char(sysdate, 'yyyy')) - to_number(to_char(encpn, 'yyyy'))
+						                                                                                   from ORGNZT_EMP_MNGT
+						                                                                                  where empno = #{empno}))
+						 else 25
+						 end as vcatn_daycnt
+		  from dual
+	</select>
+	
+	<!-- 올해 총 사용 연차 일수 -->
+	<select id="selectTotUsedVacDays" parameterType="int" resultType="int">
+		select sum(use_vcatn_daycnt)
+		  from dclz_vcatn
+		 where empno = #{empno}
+		   and sanctn_no in (select sanctn_no 
+		                      from ECCST_SANCTN_MNGT
+		                     where to_char(rgsde, 'yyyy') = to_char(sysdate, 'yyyy')
+		                       and sttus_code != 'G003')
+	</select>
+
+	<!-- 올해 총 사용 반차 일수 -->
+	<select id="selectUsedHalfDayoffDays" parameterType="int" resultType="int">
+		select sum(use_vcatn_daycnt)
+			 from dclz_vcatn
+			where empno = #{empno}
+			  and sanctn_no in (select sanctn_no 
+			                     from ECCST_SANCTN_MNGT
+			                    where to_char(rgsde, 'yyyy') = to_char(sysdate, 'yyyy')
+			                      and sttus_code != 'G003')
+			   and vcatn_code in ('VCDE23', 'VCDE24')
+   	</select>
+
+	<!-- 올해 총 사용 병가 일수 -->
+	<select id="selectUsedSickDayoffDays" parameterType="int" resultType="int">
+		select sum(use_vcatn_daycnt)
+			 from dclz_vcatn
+			where empno = #{empno}
+			  and sanctn_no in (select sanctn_no 
+			                     from ECCST_SANCTN_MNGT
+			                    where to_char(rgsde, 'yyyy') = to_char(sysdate, 'yyyy')
+			                      and sttus_code != 'G003')
+			   and vcatn_code  = 'VCDE25'
+   	</select>
+
+	<!-- 올해 총 사용 연차 일수 -->
+	<select id="selectUsedDayoffDays" parameterType="int" resultType="int">
+		select sum(use_vcatn_daycnt)
+			 from dclz_vcatn
+			where empno = #{empno}
+			  and sanctn_no in (select sanctn_no 
+			                     from ECCST_SANCTN_MNGT
+			                    where to_char(rgsde, 'yyyy') = to_char(sysdate, 'yyyy')
+			                      and sttus_code != 'G003')
+			   and vcatn_code  = 'VCDE27'
+   	</select>
+</mapper>
+
+
+
+
+
+
+
+

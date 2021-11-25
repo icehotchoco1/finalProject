@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="News-Mapper">
+	
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and cn like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and (
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+	</sql>
+	<select id="selectSearchNewsList"	resultType="news">
+		select
+		*
+		from
+		BBS_CMPNY_DSPTCH
+		where BBSCTT_NO is not null  			  	
+		<include refid="search" />
+		order by bbsctt_no desc
+	</select>
+	
+	<select id="selectSearchNewsListCount" resultType="int">
+		select
+		count(*)
+		from
+		BBS_CMPNY_DSPTCH
+		where BBSCTT_NO is not null  			  	
+		<include refid="search" />
+		order by bbsctt_no desc
+	</select>
+	
+	<select id="selectNewsList" resultType="news">
+		select * 
+		from BBS_CMPNY_DSPTCH
+		order by bbsctt_no desc	
+	</select>
+	
+	<select id="selectNewsByBbscttno"  resultType="news">
+		select * 
+		from BBS_CMPNY_DSPTCH
+		where BBSCTT_NO=#{bbsctt_no}
+	</select>
+	
+	<update id="insertNews" parameterType="news">
+		insert 
+		into
+		bbs_cmpny_dsptch(bbsctt_no,sj,rgsde,empno,emp_nm,cn) 
+		values
+		(#{bbsctt_no},#{sj},sysdate,#{empno},#{emp_nm},#{cn})
+	</update>
+	
+	<update id="updateNews" parameterType="news">
+		update 
+		BBS_CMPNY_DSPTCH 
+		set 
+		sj=#{sj}, cn=#{cn}
+		where BBSCTT_NO=#{bbsctt_no}
+	</update>
+	
+	<update id="deleteNews" parameterType="str">
+		delete 
+		from BBS_CMPNY_DSPTCH 
+		where bbsctt_no=#{bbsctt_no}
+	</update>
+	
+	<update id="increaseViewCnt" parameterType="str">
+		update 
+		BBS_CMPNY_DSPTCH 
+		set 
+		rdcnt=rdcnt+1 
+		where bbsctt_no=#{bbsctt_no}
+	</update>
+	
+	<select id="selectNewsSeqNext" resultType="str">
+		select news_seq.nextval as bbsctt_no from dual
+	</select>
+</mapper>

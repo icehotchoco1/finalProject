@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Dclz-Mapper">
+
+
+	<select id="selectListDclz" resultType="dclz">
+		select *
+		from dclz_mngt
+		where empno = #{empno}
+	</select>
+
+
+	<select id="selectDclzCount" resultType="dclz">
+		select COUNT(sttus_code) as sttus_code from dclz_mngt where sttus_code =
+		'F001' and empno = #{empno} and to_char(rgsde, 'yyyy-mm') = (select
+		to_char(sysdate,'yyyy-mm') from dual) 
+		union all
+		select COUNT(sttus_code)
+		as sttus_code from dclz_mngt where sttus_code = 'F002' and empno =
+		#{empno} and to_char(rgsde, 'yyyy-mm') = (select
+		to_char(sysdate,'yyyy-mm') from dual)
+		union all
+		select COUNT(sttus_code)
+		as sttus_code from dclz_mngt where sttus_code = 'F003' and empno =
+		#{empno} and to_char(rgsde, 'yyyy-mm') = (select
+		to_char(sysdate,'yyyy-mm') from dual)
+		union all
+		select COUNT(sttus_code)
+		as sttus_code from dclz_mngt where sttus_code = 'F004' and empno =
+		#{empno} and to_char(rgsde, 'yyyy-mm') = (select
+		to_char(sysdate,'yyyy-mm') from dual)
+		union all
+		select COUNT(sttus_code)
+		as sttus_code from dclz_mngt where sttus_code = 'F005' and empno =
+		#{empno} and to_char(rgsde, 'yyyy-mm') = (select
+		to_char(sysdate,'yyyy-mm') from dual)
+	</select>
+
+	<select id="selectDclzList" resultType="emp"
+		parameterType="java.util.Map">
+		select  rgsde,
+		attend_time,
+		lvffc_time,
+		ROUND(ABS(lvffc_time - attend_time) * 24, 2) AS time,
+		(select code_dc from code a where sttus_code = a.code_no) as sttus_code
+		from dclz_mngt 
+		where
+        empno = #{empno}
+		and rgsde between to_date(#{startDate},'yyyy-mm-dd HH24:mi:ss') and to_date(#{endDate},'yyyy-mm-dd HH24:mi:ss')+1
+	</select>
+	
+	<select id="selectDclzDayCount" resultType="dclz">
+		select count(sttus_code) as day from dclz_mngt where empno = #{empno} and to_char(rgsde, 'yyyy-mm') = (select to_char(sysdate,'yyyy-mm') from dual)
+	</select>
+	
+	<select id="selectDclzTotalTime" resultType="dclz">
+		select sum(ROUND(ABS(lvffc_time - attend_time) * 24, 2)) as time from dclz_mngt where empno = #{empno} and to_char(rgsde, 'yyyy-mm') = (select to_char(sysdate,'yyyy-mm') from dual)
+	</select>
+	
+	<select id="selectChart" resultType="dclz">
+	  select to_char(b.dt, 'yyyy-mm') as datee
+	  , nvl(sum(a.total), 0) data
+	  from (select to_char(rgsde, 'yyyy-mm-dd') as rgsde
+	  , sum(adit_work_time) total
+	  from dclz_mngt
+	  where empno = #{empno}
+	  group by rgsde
+	  ) a
+	  , ( select to_date('2021-01-01','yyyy-mm-dd') + level - 1 as dt
+	  from dual 
+	  <![CDATA[ connect by level <= (to_date('2021-12-31','yyyy-mm-dd') ]]>
+	                               - to_date('2021-01-01','yyyy-mm-dd') + 1)
+	  ) b
+	  where b.dt = a.rgsde(+)
+	  group by to_char(b.dt, 'yyyy-mm')
+	  order by to_char(b.dt, 'yyyy-mm')
+	</select>
+	
+	<select id="selectbackfront" resultType="dclz">
+		WITH ex AS(
+		SELECT a.endtime as endtimeee FROM dclz_commute_log b, dclz_commute a WHERE a.cmte_code = b.cmte_code and b.empno = #{empno}) 
+		select distinct substr(endtimeee,1,2) as front, substr(endtimeee,3,4) as back 
+		from ex
+	</select>
+	
+	
+	<select id="selecttopcommute" resultType="dclz">
+		select ATTEND_TIME, LVFFC_TIME from dclz_mngt where dclz_no = (select max(to_number(dclz_no)) from dclz_mngt where empno = #{empno})
+	</select>
+	
+	<!-- <select id="" resultType="int"> select lvffc_time - attend_time, ROUND((lvffc_time 
+		- attend_time) * 24 * 60, 2) from dclz_mngt; </select> -->
+	
+	<select id="getLateList" parameterType="int" resultType="dclz">
+		select *
+		from dclz_mngt
+		where empno in (select empno 
+                from orgnzt_emp_mngt
+                where dept_code in (
+                                    select dept_code 
+                                    from ORGNZT_EMP_MNGT 
+                                    where empno = #{empno}))
+		and sttus_code != 'F001'
+	</select>
+	
+	<select id="getLateListCount" parameterType="int" resultType="int">
+		select count(*)
+		from dclz_mngt
+		where empno in (select empno 
+                from orgnzt_emp_mngt
+                where dept_code in (
+                                    select dept_code 
+                                    from ORGNZT_EMP_MNGT 
+                                    where empno = #{empno}))
+		and sttus_code != 'F001'
+	</select>
+	
+	<update id="updateDclzMngtbyEmpno" parameterType="dclz">
+		      update dclz_mngt
+    			set sttus_code = 'F001',lvffc_time = attend_time + interval '8' hour
+      		where rgsde = #{rgsde} and empno = #{empno}
+	</update>
+</mapper>

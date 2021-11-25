@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Ctsn-Mapper">
+
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and cn like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and (
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+	</sql>
+	
+	<select id="selectSearchCtsnList" resultType="ctsn">
+		select
+		*
+		from
+		bbs_ctsnnbd
+		where bbsctt_no is not null  			  	
+		<include refid="search" />
+		order by bbsctt_no desc
+	</select>
+
+	<select id="selectSearchCtsnListCount" resultType="int">
+		select
+		count(*)
+		from
+		bbs_ctsnnbd
+		where bbsctt_no is not null  			  	
+		<include refid="search" />
+		order by bbsctt_no desc
+	</select>
+	
+	<select id="selectCtsnList" resultType="ctsn">
+		select * 
+		from bbs_ctsnnbd
+		order by bbsctt_no desc		
+	</select>
+	
+	<select id="selectCtsnByBbscttNo"  resultType="ctsn">
+		select * 
+		from bbs_ctsnnbd 
+		where bbsctt_no=#{bbsctt_no}
+	</select>	
+	
+	<update id="insertCtsn" parameterType="ctsn">
+		insert 
+		into 
+		bbs_ctsnnbd(bbsctt_no,sj,emp_nm,cn,empno)
+		values
+		( #{bbsctt_no},#{sj},#{emp_nm},#{cn},#{empno})
+	</update>	
+	
+	<update id="updateCtsn" parameterType="ctsn">
+		update 
+		bbs_ctsnnbd
+		set 
+		sj=#{sj}, cn=#{cn}
+		where bbsctt_no=#{bbsctt_no}
+	</update>
+	
+	<update id="deleteCtsn" parameterType="str">
+		delete 
+		from bbs_ctsnnbd
+		where bbsctt_no=#{bbsctt_no}
+	</update>
+	
+	<update id="increaseViewCnt" parameterType="str">
+		update 
+		bbs_ctsnnbd
+		set 
+		rdcnt=rdcnt+1 
+		where bbsctt_no=#{bbsctt_no}
+	</update>
+	
+	<select id="selectCtsnSeqNext" resultType="int">
+		select ctsn_seq.nextval as bbsctt_no from dual
+	</select>
+</mapper>

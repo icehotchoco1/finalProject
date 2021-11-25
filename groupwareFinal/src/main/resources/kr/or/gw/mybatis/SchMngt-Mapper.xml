@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SchMngt-Mapper">
+
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and cn like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and (
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+	</sql>
+
+<!-- 	<update id="insertSch" parameterType="schm"> -->
+<!-- 		insert -->
+<!-- 		into -->
+<!-- 		schdul_mngt(schdul_no,empno,nm,schdul_code,schdul_sj,schdul_cn,rgsde,bgnde,endde,cnrs_at -->
+<!-- 		,bg_color,dept_code) -->
+<!-- 		values -->
+<!-- 		('schm'||sch_seq.nextval,#{empno}, #{nm},#{schdul_code} ,#{schdul_sj}, -->
+<!-- 		#{schdul_cn},sysdate,to_date(#{bgnde},'yyyy-mm-dd HH24-mi'),to_date(#{endde},'yyyy-mm-dd HH24-mi'),#{cnrs_at},#{bg_color},#{dept_code}) -->
+<!-- 	</update> -->
+	<update id="insertSch" parameterType="schm">
+		insert
+		into
+		schdul_mngt(schdul_no,empno,nm,schdul_code,schdul_sj,schdul_cn,rgsde,bgnde,endde
+		,bg_color,dept_code)
+		values
+		(#{schdul_no},#{empno}, #{nm},#{schdul_code} ,#{schdul_sj},
+		#{schdul_cn},sysdate,to_date(#{bgnde},'yyyy-mm-dd HH24-mi'),to_date(#{endde},'yyyy-mm-dd HH24-mi'),#{bg_color},#{dept_code})
+	</update>
+
+	<update id="updateSch" parameterType="schm">
+		update
+		schdul_mngt               
+		set
+		schdul_sj=#{schdul_sj}, 
+		schdul_cn=#{schdul_cn}, 
+		bgnde=to_date(#{bgnde},'yyyy-mm-dd HH24-mi'),
+		endde=to_date(#{endde},'yyyy-mm-dd HH24-mi'),
+		schdul_code=#{schdul_code},
+		bg_color=#{bg_color}
+		where schdul_no=#{schdul_no}
+	</update>
+
+
+	<update id="deleteSch" parameterType="str">
+		delete
+		from schdul_mngt
+		where schdul_no=#{schdul_no}
+	</update>
+
+	<select id="schmList" resultType="schm">
+		select
+		*
+		from
+		schdul_mngt
+		where empno = #{empno} or schdul_code = 'I003'  or(
+        dept_code = (select dept_code
+        from orgnzt_emp_mngt
+        where empno = #{empno}) and schdul_code = 'I002')
+	</select>
+
+
+	<select id="selectSchmSeqNext" resultType="int">
+		select
+		sch_seq.nextval
+		as schdul_no from dual
+	</select>
+
+
+	<select id="selectSchBySchdul_no" parameterType="str"
+		resultType="schm">
+		 select 
+         schdul_no,schdul_sj,schdul_cn,bgnde,endde,nm,cnrs_at,rgsde,
+         (select code_dc 
+          from code 
+          where schdul_code = code_no
+          ) as schdul_code
+		from schdul_mngt
+		where
+		schdul_no = #{schdul_no }
+	</select>
+	
+	<select id="selectCompany" resultType="schm">
+		SELECT
+    	*
+		FROM
+    	schdul_mngt
+		where schdul_code = 'I003'
+	</select>
+	
+	<select id="selectDday" resultType="schm">
+		select empno, schdul_sj, to_char(bgnde) as bgnde, dept_code, schdul_code,
+      		   to_char(ceil(to_number(bgnde-sysdate))) as dday
+		from schdul_mngt
+		where schdul_no is not null
+		<include refid="search" />
+		and ceil(to_number(bgnde-sysdate)) > 0
+		and empno = #{empno}
+		
+		union
+		
+		select empno, schdul_sj, to_char(bgnde) as bgnde, dept_code, schdul_code,
+		       to_char(ceil(to_number(bgnde-sysdate))) as dday
+		from schdul_mngt
+		where schdul_no is not null
+		<include refid="search" />
+		and ceil(to_number(bgnde-sysdate)) > 0
+		and dept_code = #{dept_code}
+		and schdul_code = 'I002'
+		
+		union
+		
+		select empno, schdul_sj, to_char(bgnde) as bgnde, dept_code, schdul_code,
+		       to_char(ceil(to_number(bgnde-sysdate))) as dday
+		from schdul_mngt
+		where schdul_no is not null
+		<include refid="search" />
+		and ceil(to_number(bgnde-sysdate)) > 0
+		and schdul_code = 'I003'
+		order by bgnde
+	</select>
+	
+	<select id="selectDdayCount" resultType="int">
+		select sum(cnt) 
+		from (
+		        select count(*) as cnt
+		        from schdul_mngt
+		        where schdul_no is not null
+		        <include refid="search" />
+		        and ceil(to_number(bgnde-sysdate)) > 0
+		        and empno = '1'
+		        and schdul_code = 'I001'
+		        
+		        union all
+		        
+		        select count(*) as cnt
+		        from schdul_mngt
+		        where schdul_no is not null
+		        <include refid="search" />
+		        and ceil(to_number(bgnde-sysdate)) > 0
+		        and dept_code = 'B003'
+		        and schdul_code = 'I002'
+		        
+		        union all
+		        
+		        select count(*) as cnt
+		        from schdul_mngt
+		        where schdul_no is not null
+		        <include refid="search" />
+		        and ceil(to_number(bgnde-sysdate)) > 0
+		        and schdul_code = 'I003')
+		
+	</select>
+	
+		<update id="updateScheduleByDrag" parameterType="schm">
+		update 
+		schdul_mngt
+		set 
+		bgnde=#{bgnde},
+		endde=#{endde}
+		where schdul_no=#{schdul_no}
+		
+	</update>
+
+</mapper>
+
+
+
+
+
+
+
+

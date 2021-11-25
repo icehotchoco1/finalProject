@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DclzVac-Mapper">
+
+	<!-- 휴가코드 -->
+	<sql id="vcatn_code">
+		<!-- 연차 -->
+		<if test="vcatn_code == 'a'.toString()">
+			and vcatn_code = 'K001'
+		</if>
+
+		<!-- 오전 반차 -->
+		<if test="vcatn_code == 'b'.toString()">
+			and vcatn_code = 'K002'
+		</if>
+
+		<!-- 오후 반차 -->
+		<if test="vcatn_code == 'c'.toString()">
+			and vcatn_code ='K003'
+		</if>
+
+		<!-- 병가 -->
+		<if test="vcatn_code == 'd'.toString()">
+			and vcatn_code ='K004'
+		</if>
+		
+		<!-- 연차, 오전반차 -->
+		<if test="vcatn_code == 'ab'.toString()">
+			and vcatn_code = 'K001'
+			or vcatn_code = 'K002'
+		</if>
+		
+		<!-- 연차, 오후반차 -->
+		<if test="vcatn_code == 'ac'.toString()">
+			and vcatn_code = 'K001'
+			or vcatn_code = 'K003'
+		</if>
+		
+		<!-- 연차, 병가 -->
+		<if test="vcatn_code == 'ad'.toString()">
+			and vcatn_code = 'K001'
+			or vcatn_code = 'K004'
+		</if>
+		
+		<!-- 오전반차, 오후반차 -->
+		<if test="vcatn_code == 'bc'.toString()">
+			and vcatn_code = 'K002'
+			or vcatn_code = 'K003'
+		</if>
+		
+		<!-- 오전반차, 병가 -->
+		<if test="vcatn_code == 'bd'.toString()">
+			and vcatn_code = 'K002'
+			or vcatn_code = 'K004'
+		</if>
+		<!-- 오후반차, 병가 -->
+		<if test="vcatn_code == 'cd'.toString()">
+			and vcatn_code = 'K003'
+			or vcatn_code = 'K004'
+		</if>
+		<!-- 연차, 오전반차, 오후반차 -->
+		<if test="vcatn_code == 'abc'.toString()">
+			and vcatn_code = 'K001'
+			or vcatn_code = 'K002'
+			or vcatn_code = 'K003'
+		</if>
+		<!-- 오전반차, 오후반차, 병가 -->
+		<if test="vcatn_code == 'bcd'.toString()">
+			and vcatn_code = 'K002'
+			or vcatn_code = 'K003'
+			or vcatn_code = 'K004'
+		</if>
+		<!-- 연차, 오전반차, 오후반차, 병가 -->
+		<if test="vcatn_code == 'abcd'.toString()">
+			and vcatn_code = 'K001'
+			or vcatn_code = 'K002'
+			or vcatn_code = 'K003'
+			or vcatn_code = 'K004'
+		</if>
+		
+	</sql>
+	
+	<select id="selectVacList" resultType="dclzVac">
+		select *
+		from dclz_vcatn
+		where empno=#{empno}
+		<include refid="vcatn_code" />
+	</select>
+	
+	<select id="selectVacListCount" resultType="int">
+		select count(*)
+		from dclz_vcatn
+		where empno=#{empno}
+		<include refid="vcatn_code" />
+	</select>
+	
+	<update id="insertVac" parameterType="dclzVac">
+		insert into
+		dclz_vcatn(vcatn_no, vcatn_code, empno, tot_vcatn_daycnt, use_vcatn_daycnt,empnm,sanctn_no)
+		values(#{vcatn_no},#{vcatn_code},#{empno},#{tot_vcatn_daycnt},#{use_vcatn_daycnt},#{empnm},#{sanctn_no})
+	</update>
+	
+	<update id="updateVac" parameterType="dclzVac">
+		update
+		dclz_vcatn
+		set
+		use_vcatn_daycnt=#{use_vcatn_daycnt}
+		where vcatn_no=#{vcatn_no}
+	</update>
+	
+	<select id="selectVac" resultType="dclzVac">
+		select *
+		from dclz_vcatn
+		where vcatn_no = #{vcatn_no}
+	</select>
+	
+	<select id="selectVacSeqNextValue" resultType="int">
+		select vcatn_seq.nextval as vcatn_no from dual
+	</select>
+	
+	<select id="selectDeptVacList" parameterType="int" resultType="dclzVac">
+	select * 
+	from dclz_vcatn
+	where empno in (
+					select empno 
+					from orgnzt_emp_mngt
+					where dept_code in (
+										select dept_code 
+										from orgnzt_emp_mngt 
+										where empno = #{empno}))
+	</select>
+	
+	<select id="selectDeptVacListCount" resultType="int">
+	select count(*) 
+	from dclz_vcatn
+	where empno in (
+					select empno 
+					from orgnzt_emp_mngt
+					where dept_code in (
+										select dept_code 
+										from orgnzt_emp_mngt 
+										where empno = #{empno}))
+	</select>
+	
+	<select id="selectsumUseVac" resultType="Float">
+      select 
+      sum(use_vcatn_daycnt)as use_vcatn_daycnt
+      from dclz_vcatn
+      where empno = #{empno}
+	</select>
+</mapper>

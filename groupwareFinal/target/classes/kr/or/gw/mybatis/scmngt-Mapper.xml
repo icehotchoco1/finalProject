@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="scmngt-Mapper">
+	<select id="selectSeqNextVal" resultType="int">
+		select
+		eccst_sanctn_mngt_seq.nextval as sanctn_no from dual
+	</select>
+	
+	<update id="FirstRegist" parameterType="scmngt">
+	  insert into
+	  <if test="bgnde != null and endde != null and sanctn_tmlmt !=null">
+      eccst_sanctn_mngt(sanctn_no,form_no,empno,sj,cn,scrty_grad,prsrv_pd,sanctn_tmlmt,ipcr_code,sttus_code,bgnde,endde,return_reason,nm)
+      values(#{sanctn_no},#{form_no},#{empno},#{sj},#{cn},#{scrty_grad},#{prsrv_pd},#{sanctn_tmlmt},#{ipcr_code},#{sttus_code},#{bgnde},#{endde},null,#{nm})
+	  </if>
+	  <if test="bgnde != null and endde != null and sanctn_tmlmt ==null">
+      eccst_sanctn_mngt(sanctn_no,form_no,empno,sj,cn,scrty_grad,prsrv_pd,ipcr_code,sttus_code,bgnde,endde,return_reason,nm)
+      values(#{sanctn_no},#{form_no},#{empno},#{sj},#{cn},#{scrty_grad},#{prsrv_pd},#{ipcr_code},#{sttus_code},#{bgnde},#{endde},null,#{nm})
+	  </if>
+	  <if test="bgnde == null and endde == null and sanctn_tmlmt != null">
+      eccst_sanctn_mngt(sanctn_no,form_no,empno,sj,cn,scrty_grad,prsrv_pd,sanctn_tmlmt,ipcr_code,sttus_code,return_reason,nm)
+      values(#{sanctn_no},#{form_no},#{empno},#{sj},#{cn},#{scrty_grad},#{prsrv_pd},#{sanctn_tmlmt},#{ipcr_code},#{sttus_code},null,#{nm})
+	  </if>	
+	  <if test="bgnde == null and endde == null and sanctn_tmlmt == null">
+      eccst_sanctn_mngt(sanctn_no,form_no,empno,sj,cn,scrty_grad,prsrv_pd,ipcr_code,sttus_code,return_reason,nm)
+      values(#{sanctn_no},#{form_no},#{empno},#{sj},#{cn},#{scrty_grad},#{prsrv_pd},#{ipcr_code},#{sttus_code},null,#{nm})
+	  </if>
+	</update>
+	
+	<update id="updateEccst" parameterType="scmngt">
+      update eccst_sanctn_mngt
+      <if test="bgnde != null and endde != null and sanctn_tmlmt !=null">
+      set sj=#{sj},cn=#{cn},sanctn_tmlmt=#{sanctn_tmlmt},rgsde=sysdate,ipcr_code=#{ipcr_code},sttus_code=#{sttus_code},bgnde=#{bgnde},endde=#{endde}
+      where sanctn_no=#{sanctn_no}
+      </if>
+      <if test="bgnde != null and endde != null and sanctn_tmlmt ==null">
+      set sj=#{sj},cn=#{cn},sanctn_tmlmt=null,rgsde=sysdate,ipcr_code=#{ipcr_code},sttus_code=#{sttus_code},bgnde=#{bgnde},endde=#{endde}
+      where sanctn_no=#{sanctn_no}
+      </if>
+      <if test="sanctn_tmlmt != null">
+      set sj=#{sj},cn=#{cn},sanctn_tmlmt=#{sanctn_tmlmt},rgsde=sysdate,ipcr_code=#{ipcr_code},sttus_code=#{sttus_code}
+      where sanctn_no=#{sanctn_no}
+      </if>
+      <if test="sanctn_tmlmt == null">
+      set sj=#{sj},cn=#{cn},sanctn_tmlmt=null,rgsde=sysdate,ipcr_code=#{ipcr_code},sttus_code=#{sttus_code}
+      where sanctn_no=#{sanctn_no}
+      </if>
+	</update>
+	
+	<update id="returnEccst" parameterType="scmngt">
+        update eccst_sanctn_mngt
+        set return_reason = #{return_reason}, sttus_code = #{sttus_code}
+        where sanctn_no = #{sanctn_no}
+	</update>
+	
+	<update id="updateEccstStatus" parameterType="scmngt">
+        update eccst_sanctn_mngt
+        set sttus_code = #{sttus_code} ,return_reason = null
+        where sanctn_no = #{sanctn_no}
+	</update>
+	
+	<update id="deleteEccst" parameterType="str">
+        delete from eccst_sanctn_mngt
+        where sanctn_no = #{sanctn_no}
+	</update>
+		
+	<select id="selectEccstDetail" parameterType="str" resultType="scmngt">
+		select *
+		from eccst_sanctn_mngt
+		where sanctn_no = #{sanctn_no}
+	</select>
+</mapper>

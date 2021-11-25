@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="JobAns-Mapper">
+	
+	<select id="selectAnsSeqNextValue" resultType="int">
+		select ans_seq.nextval
+		from dual		
+	</select>
+	
+	<select id="selectAnsList" resultType="jobAns">
+		select *
+		from job_answer
+		where job_no=#{job_no}
+		order by answer_no asc
+	</select>
+	
+	<select id="countAns" resultType="int">
+		select count(answer_no)
+		from job_answer
+		where job_no=#{job_no}
+	</select>
+	
+	<update id="insertAns" parameterType="jobAns">
+		insert into job_answer(answer_no, job_no, empno, acn, regist_de, empnm)
+		values(#{answer_no},#{job_no},#{empno},#{acn},sysdate,#{empnm})
+	</update>
+	
+	<update id="updateAns" parameterType="jobAns">
+		update job_answer
+		set
+		acn=#{acn}
+		where answer_no='${answer_no}'
+	</update>
+	
+	<update id="deleteAns" parameterType="string">
+		delete from job_answer
+		where answer_no=#{answer_no}
+	</update>
+	
+	<update id="deleteAllAns" parameterType="string">
+		delete from job_answer
+		where job_no=#{job_no}
+	</update>
+	
+	
+</mapper>
+
+
+
+
+
+
+
+

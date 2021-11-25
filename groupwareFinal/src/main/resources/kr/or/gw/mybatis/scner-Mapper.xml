@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="scner-Mapper">
+<!-- scner -->
+	<select id="selectSeqNextVal" resultType="int">
+		select
+		eccst_sanctner_seq.nextval as sanctner_no from dual
+	</select>
+	
+	<update id="insertSanctners" parameterType="scner">
+		insert into 
+		eccst_sanctner
+		<if test="replace_empno == -1234567890">
+		values(#{sanctner_no},#{sanctn_no},#{sanctner_nm},#{sanctner_empno},#{ln_no},#{sanctn_sttus},#{lst_confirm_at},null,null,null)
+		</if>
+		<if test="replace_empno != -1234567890">
+		values(#{sanctner_no},#{sanctn_no},#{sanctner_nm},#{sanctner_empno},#{ln_no},#{sanctn_sttus},#{lst_confirm_at},null,#{replace_empno},null)
+		</if>
+		
+	</update>
+	
+	<select id="selectSanctners"  resultType="scner">
+		select * from 
+		eccst_sanctner
+		where sanctn_no=#{sanctn_no}
+		order by ln_no
+	</select>
+	
+	<update id="updateSanctner">
+		update eccst_sanctner
+		<if test="sanctner_empno  != null and replace_empno == -1234567890">
+		set sanctn_sttus=#{sanctn_sttus},sanctn_date=SYSDATE
+		where sanctn_no = #{sanctn_no} and sanctner_empno = #{sanctner_empno} and sanctn_sttus='L001' 
+		</if>
+		<if test="sanctner_empno  == -1234567890 and replace_empno != null">
+		set sanctn_sttus=#{sanctn_sttus},sanctn_date=SYSDATE,resanc_at = 'Y'
+		where sanctn_no = #{sanctn_no} and replace_empno = #{replace_empno} and sanctn_sttus='L001' 
+		</if>
+	</update>
+	
+	<update id="deleteSanctners">
+		delete from eccst_sanctner
+		where sanctn_no=#{sanctn_no}
+	</update>
+	
+	<select id="selectMaxLineNo" resultType="int">
+	     select max(ln_no) from eccst_sanctner
+         where sanctn_no = #{sanctn_no}
+	</select>
+	
+	<select id="selectLineNobySanctnNo" resultType="int">
+	    select ln_no from eccst_sanctner
+	    <if test="sanctner_empno  != null and replace_empno == -1234567890">
+		where sanctn_no = #{sanctn_no} and sanctner_empno = #{sanctner_empno} and sanctn_sttus='L004' 
+		</if>
+		<if test="sanctner_empno  == -1234567890 and replace_empno != null">
+		where sanctn_no = #{sanctn_no} and replace_empno = #{replace_empno} and sanctn_sttus='L004' 
+		</if>
+	</select>
+	
+	<update id="updateAllConfirmAt">
+	    update eccst_sanctner
+		set lst_confirm_at=#{lst_confirm_at}
+		where sanctn_no = #{sanctn_no}
+	</update>
+	
+	<update id="updateNextSanctner">
+        update eccst_sanctner
+		set sanctn_sttus=#{sanctn_sttus}
+		where sanctn_no = #{sanctn_no}  and  ln_no = #{ln_no}
+	</update>
+</mapper>

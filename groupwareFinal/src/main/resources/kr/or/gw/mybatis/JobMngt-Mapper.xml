@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="JobMngt-Mapper">
+	<!-- 검색 -->
+	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and sj like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and emp_nm like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and cn like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and (
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and (
+			sj like '%'||#{keyword}||'%'
+			or
+			emp_nm like '%'||#{keyword}||'%'
+			or
+			cn like '%'||#{keyword}||'%'						
+			)			
+		</if>
+	</sql>
+	
+	<!-- 중요도코드 -->
+	<sql id="imcode">
+		<!-- 보통 -->
+		<if test="imcode == 'H001'.toString()">
+			and im_code = 'H001'
+		</if>
+
+		<!-- 긴급 -->
+		<if test="imcode == 'H002'.toString()">
+			and im_code = 'H002'
+		</if>
+
+		<!-- 낮음 -->
+		<if test="imcode == 'H003'.toString()">
+			and im_code ='H003'
+		</if>
+	</sql>
+	
+	<!-- 공통 -->
+	<select id="selectJobByJno"  resultType="jobMngt">
+		select * 
+		from job_mngt
+		where job_no=#{job_no}
+	</select>
+	
+	<update id="deleteJob" parameterType="str">
+		delete 
+		from job_mngt
+		where job_no=#{job_no}
+	</update>
+	
+	<select id="selectJobSeqNextValue" resultType="int">
+		select job_seq.nextval as job_no from dual
+	</select>
+	
+	<select id="selectAllJobList" resultType="jobMngt">
+		select * 
+		from job_mngt
+		order by job_no desc		
+	</select>
+
+	<update id="insertJob" parameterType="jobMngt">
+		insert 
+		into
+		job_mngt(job_no,drctr_empno,sj,cn,regist_de,im_code,end_de,emp_nm) 
+		values
+		(#{job_no},#{drctr_empno},#{sj},#{cn},sysdate,#{im_code},#{end_de},#{emp_nm})
+	</update>
+	
+	<update id="updateJob" parameterType="jobMngt">
+		update 
+		job_mngt 
+		set 
+		sj=#{sj}, cn=#{cn}, regist_de=sysdate, sttus_code=#{sttus_code}, im_code=#{im_code}, end_de=#{end_de}
+		where job_no=#{job_no}
+	</update>
+	
+
+	<!-- 전체 업무 -->
+	<select id="selectSearchJobList" resultType="jobMngt">
+		select *
+		from job_mngt a
+		left outer join (
+		        select job_no, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no
+		) b on a.job_no = b.job_no
+		where a.job_no is not null
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+	</select>
+	
+	<select id="selectSearchJobListCount" resultType="int">
+		select count(*)
+		from job_mngt a
+		left outer join (
+		        select job_no, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no
+		) b on a.job_no = b.job_no
+		where a.job_no is not null
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+	</select>
+
+	
+	<!-- 받은 업무 -->
+	<select id="selectSearchJobRecList" resultType="jobMngt">
+		
+		select *
+		from job_mngt a
+		left outer join (
+		        select job_no, rcver_empno, rcver_nm, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no, rcver_empno, rcver_nm
+		) b on a.job_no = b.job_no
+		where a.job_no is not null
+        and b.rcver_empno = #{rcver_empno}
+        and b.rcver_progrs <![CDATA[<]]> 100
+        and b.rcver_progrs <![CDATA[>]]> 0
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+		
+	</select>
+
+	<select id="selectSearchJobRecListCount" resultType="int">
+		select count(*)
+		from job_mngt a
+		left outer join (
+		        select job_no, rcver_empno, rcver_nm, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no, rcver_empno, rcver_nm
+		) b on a.job_no = b.job_no
+		where a.job_no is not null
+        and b.rcver_empno = #{rcver_empno}
+        and b.rcver_progrs <![CDATA[<]]> 100
+        and b.rcver_progrs <![CDATA[>]]> 0
+		<include refid="imcode" />
+		<include refid="search" />
+		order by a.job_no desc
+	</select>
+	
+	
+	<!-- 대기 업무 -->
+	<select id="selectSearchJobWaitList" resultType="jobMngt">
+		select *
+		from job_mngt a
+		left outer join (
+		        select job_no, rcver_empno, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no, rcver_empno
+		) b on a.job_no = b.job_no
+		where a.job_no is not null
+		and b.rcver_empno = #{rcver_empno}
+		and b.rcver_progrs = 0
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+	</select>
+
+	<select id="selectSearchJobWaitListCount" resultType="int">
+		select count(*)	
+		from job_mngt a
+		left outer join (
+		        select job_no, rcver_empno, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no, rcver_empno
+		) b on a.job_no = b.job_no
+		where a.job_no is not null
+		and b.rcver_empno = #{rcver_empno}
+		and b.rcver_progrs = 0
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+	</select>
+	
+	
+	
+	<!-- 지시 업무 -->
+	<select id="selectSearchJobSendList" resultType="jobMngt">
+		select *
+		from job_mngt a
+		left outer join (
+		        select job_no, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no
+		) b on a.job_no = b.job_no
+		where a.job_no is not null
+		and a.drctr_empno= #{drctr_empno}
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+	</select>
+	
+	<select id="selectSearchJobSendListCount" resultType="int">
+		select count(*)
+		from job_mngt a
+		left outer join (
+		        select job_no, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no
+		) b on a.job_no = b.job_no
+		where a.job_no is not null
+		and a.drctr_empno= #{drctr_empno}
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+	</select>
+
+
+	<!-- 완료 업무 -->
+	<select id="selectSearchJobCompletionList" resultType="jobMngt">
+		select *
+		from job_mngt a
+		left outer join (
+		        select job_no, rcver_empno, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no, rcver_empno
+		) b on a.job_no = b.job_no
+		where (b.rcver_empno = #{rcver_empno} and b.rcver_progrs=100)
+		or (a.drctr_empno = #{drctr_empno} and b.rcver_progrs=100)
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+	</select>
+	
+	<select id="selectSearchJobCompletionListCount" resultType="int">
+		select count(*)
+		from job_mngt a
+		left outer join (
+		        select job_no, rcver_empno, avg(rcver_progrs) as rcver_progrs
+		        from job_rcv
+		        group by job_no, rcver_empno
+		) b on a.job_no = b.job_no
+		where (b.rcver_empno = #{rcver_empno} and b.rcver_progrs=100)
+		or (a.drctr_empno = #{drctr_empno} and b.rcver_progrs=100)
+		<include refid="search" />
+		<include refid="imcode" />
+		order by a.job_no desc
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
