@@ -13,8 +13,10 @@ UA : 김수정
 TA : 송지수
 
 프로젝트에서 작업한 페이지 캡쳐 목록
+<br><br>
 
-
+개발환경
+![ff](https://user-images.githubusercontent.com/82941038/147357089-780895aa-5ec8-44d3-aeaa-08ea843315bd.PNG)
 게시판
 ![aa](https://user-images.githubusercontent.com/82941038/147356593-7fa091e0-bb9f-4c17-a6ae-88a3ed9f2d13.PNG)
 업무 지시 등록(회원 목록에서 지정 후 등록)
